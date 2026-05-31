@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Clinic_Application": {
+      "commandName": "Project"
+    },
+    "Profile 1": {
+      "commandName": "Project"
+    }
+  }
+}
