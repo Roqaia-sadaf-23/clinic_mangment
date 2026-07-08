@@ -31,8 +31,13 @@ namespace Clinic_Application.Features.Users.Command.CreateUser
                 .WithMessage("Role ID must be greater than 0.");
             RuleFor(x => x.NationalityNo).Empty()
                 .WithMessage("Nationality Number must be greater than 0.");
+            RuleFor(x=>x.IsActive).NotEmpty()
+                .WithMessage("IsActive is required.");
+            RuleFor(x => x.Age).GreaterThan(0)
+                .WithMessage("Age must be greater than 0.");
+            RuleFor(  x => x.Gender).NotEmpty().InclusiveBetween((byte)1, (byte)2)
+                .WithMessage("Gender must be either 1=Male 2=Female.");
 
-
-        }
+    }
     }
 }

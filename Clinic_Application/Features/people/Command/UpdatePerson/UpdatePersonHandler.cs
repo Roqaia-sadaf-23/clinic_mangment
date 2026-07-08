@@ -22,7 +22,8 @@ namespace Clinic_Application.Features.people.Command.UpdatePerson
       //  people.Update(person);
             person.Update(request.FirstName, request.LastName, request.NationalityNo,
                 request.PhoneNumber, request.Age,
-                request.Address,request.Gender,request.NationalityCountryId, request.ImagePath, request.Note);
+                request.Address,request.Gender,request.NationalityCountryId,
+                request.ImagePath, request.Note);
             context.People.Update(person);
             context.SaveChangesAsync(cancellationToken);
 

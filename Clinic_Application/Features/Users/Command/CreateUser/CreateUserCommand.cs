@@ -12,10 +12,10 @@ public sealed record CreateUserCommand(
 
     int RoleId,
 
-    int? PhoneNumber,
+    string? PhoneNumber,
     int? Age,
     string? Address,
-    byte? Gender,
+    byte Gender,
     int NationalityCountryId,
     string? ImagePath,
     string? Note

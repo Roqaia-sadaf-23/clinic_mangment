@@ -18,14 +18,14 @@ namespace Clinic_Application.DTOs.User
         public string UserName { set; get; }    
         public bool IsActive { set; get; }
       //  public string Password { get; set; } = string.Empty;
-        public int? PhoneNumber { set; get; }   
+        public string? PhoneNumber { set; get; }   
 
         public int? Age { set; get; }    
         public String NationalityNo { set; get; }
         //public string PasswordHash { set; get; } = string.Empty;
         public string RoleName { set; get; } = string.Empty;
         public string? Address { set; get; }
-        public string? Gender { set; get; }
+        public byte? Gender { set; get; }
         public int NationalityCountryID { set; get; }
         public string? ImagePath { set; get; }
          public string? Note { set; get; }

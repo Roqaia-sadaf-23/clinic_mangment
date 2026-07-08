@@ -29,6 +29,7 @@ namespace Clinic_Application.Features.Doctor.Queries.GetDoctorByID
                         lastName = person.LastName,
                         Specialization = doctor.Specialty,
                         Age = person.Age,
+                        experienceYears = doctor.ExperienceYears,
                         Note = person.Note,
                         ImagePath = person.ImagePath,
                         UserId = context.Users.

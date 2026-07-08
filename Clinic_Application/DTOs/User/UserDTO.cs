@@ -16,7 +16,7 @@ namespace Clinic_Application.DTOs.User
         public string  Email { set; get; }
         public string UserName { set; get; }
         public bool  IsActive { set; get; }
-        public int? PhoneNumber { set; get; } 
+        public string? PhoneNumber { set; get; } 
         public String NationalityNo { set; get; }
         //public string PasswordHash { set; get; } = string.Empty;
         public string RoleName { set; get; } = string.Empty;

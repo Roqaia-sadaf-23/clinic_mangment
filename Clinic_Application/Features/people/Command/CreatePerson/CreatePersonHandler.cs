@@ -13,7 +13,8 @@ namespace Clinic_Application.Features.people.Command.CreatePerson
     {
         public async Task<PersonDTO> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
         {
-            var person = parsonEntity.Create(request.FirstName, request.LastName, request.NationalityNo, request.PhoneNumber,
+            var person = parsonEntity.Create(request.FirstName, request.LastName,
+                request.NationalityNo, request.PhoneNumber,
                 request.Age, request.Address,
                 request.Gender, request.NationalityCountryId, request.ImagePath, request.Note);
             context.People.Add(person);

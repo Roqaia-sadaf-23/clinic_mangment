@@ -1,17 +1,23 @@
 ﻿using Clinic_Application.Common.Interfaces;
 using Clinic_Application.DTOs.Appintment;
+using Clinic_Application.Features.Appointments.Services;
 using MediatR;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 
 namespace Clinic_Application.Features.Appointments.Query.GetAppointmentByUserId
 {
-    public sealed class GetAppointmentByUserIdQueryHandler(IAppDBContext context)
+    public sealed class GetAppointmentByUserIdQueryHandler(IAppDBContext context,IMediator mediator)
         : IRequestHandler<GetAppointmentByUserIdQuery, List<AppointmentDTO>>
     {
         public async Task<List<AppointmentDTO>> Handle(
             GetAppointmentByUserIdQuery request,
             CancellationToken cancellationToken)
         {
+
+            await mediator.Send(
+     new CancelExpiredAppointmentsCommand(),
+     cancellationToken);
             var user = await context.Users
                 .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
 

@@ -3,6 +3,10 @@ using Clinic_Application.Common.Interfaces;
 using Clinic_Application.DTOs.User;
 using Clinic_Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using User = Clinic_Domain.Entities.User;
+
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Clinic_Application.Features.Users.Command.CreateUser
 {
@@ -13,6 +17,11 @@ namespace Clinic_Application.Features.Users.Command.CreateUser
             CreateUserCommand request,
             CancellationToken cancellationToken)
         {
+            if (await context.Users.AnyAsync(u => u.Email == request.Email, cancellationToken))
+            {
+                throw new Exception("Email already exists");
+            }
+
             // Hash Password
             var hashedPassword =
                 BCrypt.Net.BCrypt.HashPassword(request.Password);
@@ -25,19 +34,15 @@ namespace Clinic_Application.Features.Users.Command.CreateUser
                 request.PhoneNumber,
                 request.Age,
                 request.Address,
-                request.Gender,
+                    request.Gender,
                 request.NationalityCountryId,
                 request.ImagePath,
                 request.Note
             );
 
-            context.People.Add(person);
-
-            await context.SaveChangesAsync(cancellationToken);
-            int Prsonid = person.ID;
             // Create User
             var user = User.CreateUser(
-                Prsonid,
+                person,
                 request.Email,
                 request.UserName,
                 hashedPassword,
@@ -45,19 +50,17 @@ namespace Clinic_Application.Features.Users.Command.CreateUser
                
             );
 
-            user.PersonId = person.ID;
+        
+            var role = await context.Roles
+        .FirstOrDefaultAsync(r => r.Id == request.RoleId, cancellationToken);
 
+            if (role == null)
+                throw new Exception("Role not found");
+
+            var userRole = UserRole.Create(user, request.RoleId);
+
+            //context.People.Add(person);
             context.Users.Add(user);
-
-            await context.SaveChangesAsync(cancellationToken);
-
-            // Create UserRole
-            var userRole = new UserRole
-            {
-                UserId = user.Id,
-                RoleId = request.RoleId
-            };
-
             context.UserRoles.Add(userRole);
 
             await context.SaveChangesAsync(cancellationToken);
@@ -66,23 +69,20 @@ namespace Clinic_Application.Features.Users.Command.CreateUser
             {
                 Id = user.Id,
                 PersonId = user.PersonId,
-                FirstName = user.Person.FirstName,
-                LastName = user.Person.LastName,
-                Age = user.Person.Age,
-                Address = user.Person.Address,
-                PhoneNumber = user.Person.PhoneNumber,
-                Note = user.Person.Note,
+                FirstName = person.FirstName,
+                LastName = person.LastName,
+                Age = person.Age,
+                Address = person.Address,
+                PhoneNumber = person.PhoneNumber,
+                Note = person.Note,
                 Email = user.Email,
                 UserName = user.UserName,
                 IsActive = user.IsActive,
-                RoleName = user.UserRoles.FirstOrDefault()?.Role.RoleName,
-
-                NationalityNo = user.Person.NationalityNo,
-                NationalityCountryID = user.Person.NationalityCountryId,
-                ImagePath = user.Person.ImagePath
-
-
-
+                RoleName = role.RoleName,
+                Gender=person.Gender,
+                NationalityNo = person.NationalityNo,
+                NationalityCountryID = person.NationalityCountryId,
+                ImagePath = person.ImagePath
             };
         }
     }

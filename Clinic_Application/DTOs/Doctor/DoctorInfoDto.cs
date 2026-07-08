@@ -14,7 +14,7 @@ namespace Clinic_Application.DTOs.Doctor
         public string lastName { get; set; }
         public int? Age { get; set; }
         public string? Note { get; set; }
-
+        public int? experienceYears { get; set; }
         public string? Specialization { get; set; } = null;
         public string? ImagePath { get; set; }
         public int UserId { get; set; }

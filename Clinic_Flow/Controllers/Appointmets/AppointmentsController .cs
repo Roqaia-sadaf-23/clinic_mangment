@@ -7,6 +7,7 @@ using Clinic_Application.Features.Appointments.Command.UpdateAppointment;
 using Clinic_Application.Features.Appointments.Query.GetAppointmentById;
 using Clinic_Application.Features.Appointments.Query.GetAppointmentByUserId;
 using Clinic_Application.Features.Appointments.Query.GetAvailableSlots;
+using Clinic_Application.Features.Appointments.Query.GetCountAppointmentByDoctorId;
 using Clinic_Application.Features.Appointments.Query.GetPendingAppointment;
 using Clinic_Domain.Common.Results;
 using MediatR;
@@ -86,6 +87,26 @@ namespace Clinic_Flow.Controllers.Appointments
                 });
             }
         }
+        //GetCountPendingAppointmentByDoctorIdQuery
+
+
+
+        [HttpGet("count-pending/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCountPendingAppointmentByDoctorId(int id, CancellationToken cancellationToken)
+        {
+
+
+
+            var result = await _mediator.Send(new GetCountPendingAppointmentByDoctorIdQuery(id));
+
+            return result <=0 ? NotFound() : Ok(result);
+        }
+
+
+
 
 
         [HttpGet("{id}", Name = "GetAppointmentById")]
@@ -101,6 +122,9 @@ namespace Clinic_Flow.Controllers.Appointments
 
             return result is null ? NotFound() : Ok(result);
         }
+
+
+
         [Authorize]
         [HttpGet("GetAppointmentByUserId")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -127,6 +151,7 @@ namespace Clinic_Flow.Controllers.Appointments
             return Ok(result);
         }
 
+      
         [HttpGet("AllAppointments")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -148,7 +173,7 @@ namespace Clinic_Flow.Controllers.Appointments
         public async Task<IActionResult> GetPendingAppointment()
         {
 
-            var result = await _mediator.Send(new GetAppointmentQuery());
+            var result = await _mediator.Send(new GetPendingAppointmentQuery());
 
             return result is null ? NotFound() : Ok(result);
         }
@@ -214,6 +239,9 @@ namespace Clinic_Flow.Controllers.Appointments
             }
             return Ok(result);
         }
+
+
+
 
         [HttpGet("available-slots")]
         public async Task<IActionResult> GetAvailableSlots(

@@ -30,10 +30,10 @@ namespace Clinic_Flow.Controllers.Payment
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetAllPaymentInfo()
+        public  async Task<IActionResult> GetAllPaymentInfo()
         {
             // Logic to get doctors
-            var query = _mediator.Send(new GetPaymentInfoQuery());
+            var query = await _mediator.Send(new GetPaymentInfoQuery());
             return query is null ? NotFound() : Ok(query);
         }
 

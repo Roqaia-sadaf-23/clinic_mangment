@@ -6,8 +6,8 @@ public class Person
     {
     }
     protected Person(string firstName, string lastName,
-        string nationalityNo, int? phoneNumber, int? age,
-        string? address, byte? gender, 
+        string nationalityNo, string? phoneNumber, int? age,
+        string? address, byte gender, 
         int nationalityCountryId, string? imagePath, string? note)
     {
 
@@ -32,11 +32,11 @@ public class Person
 
     public string NationalityNo { get; set; } = null!;
 
-    public int? PhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
     public int? Age { get; set; }
     public string? Address { get; set; }
 
-    public byte? Gender { get; set; }
+    public byte Gender { get; set; }
     //1=Male 2=Female
     public int NationalityCountryId { get; set; }
     //   public Country Country { get; set; }
@@ -59,8 +59,8 @@ public class Person
 
 
     public static Person Create(string firstName, string lastName
-        , string nationalityno, int? phoneNumber, int? age, string address,
-        byte? gender, int nationalityCountryId, string? imagePath, string? note)
+        , string nationalityno, string? phoneNumber, int? age, string address,
+        byte gender, int nationalityCountryId, string? imagePath, string? note)
     {
         return new Person(firstName, lastName, nationalityno, phoneNumber, age, address, gender, nationalityCountryId, imagePath, note);
 
@@ -69,8 +69,8 @@ public class Person
 
 
     public void Update(string firstName, string lastName
-        , string nationalityno, int? phoneNumber, int? age, string address,
-        byte? gender, int nationalityCountryId, string? imagePath, string? note)
+        , string nationalityno, string? phoneNumber, int? age, string address,
+        byte gender, int nationalityCountryId, string? imagePath, string? note)
     {
 
         if (string.IsNullOrWhiteSpace(firstName))
@@ -82,7 +82,7 @@ public class Person
         if (nationalityCountryId <= 0)
             throw new ArgumentException("nationalityCountryId must be greater than 0.");
         if (age <= 0) throw new ArgumentException("age must be greater than 0.");
-
+        if (gender < 1 || gender > 2) throw new ArgumentException("Gender must be either 1=Male or 2=Female."); 
 
         FirstName = firstName;
         LastName = lastName;

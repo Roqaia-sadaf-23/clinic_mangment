@@ -16,7 +16,7 @@ namespace Clinic_Application.Features.Appointments.Query.GetPendingAppointment
         public async Task<List<AppointmentDTO>> Handle(GetPendingAppointmentQuery request, CancellationToken cancellationToken)
         {
 
-            return await context.Appointments.Where(s => s.AppointmentStatus == AppointmentStatus.Pending).Select(s => s.ToDTO()).ToListAsync(cancellationToken);
+            return await context.Appointments.Where( s => s.AppointmentStatus == AppointmentStatus.Pending&& s.AppointmentDate>=DateTime.Now).Select(s => s.ToDTO()).ToListAsync(cancellationToken);
 
 
         }

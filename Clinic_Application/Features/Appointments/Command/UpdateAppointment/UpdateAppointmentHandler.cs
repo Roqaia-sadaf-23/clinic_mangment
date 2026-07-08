@@ -1,15 +1,10 @@
 ﻿using Clinic_Application.Common.Interfaces;
 using Clinic_Application.DTOs.Appintment;
-using Clinic_Application.DTOs.Appintment;
-using Clinic_Domain.Common.Results;
 using MediatR;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SendGrid.Helpers.Errors.Model;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Clinic_Application.Features.Appointments.Command.UpdateAppointment
 {
@@ -32,12 +27,14 @@ namespace Clinic_Application.Features.Appointments.Command.UpdateAppointment
                 throw new NotFoundException();
 
             }
-            appointment.DoctorId = request.DoctorId;
-            appointment.PatientId = request.PatientId;
-            appointment.AppointmentDate = request.AppointmentDate;
-         //   appointment.DurationInMinutes = request.DurationInMinutes;
-            appointment.Notes = request.Notes;
-             _context.Appointments.Update(appointment);
+
+            appointment.Update(request.DoctorId, request.PatientId, request.AppointmentDate, request.Notes);
+            //   appointment.DoctorId = request.DoctorId;
+            //   appointment.PatientId = request.PatientId;
+            //   appointment.AppointmentDate = request.AppointmentDate;
+            ////   appointment.DurationInMinutes = request.DurationInMinutes;
+            //   appointment.Notes = request.Notes;
+            _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync(cancellationToken);
 
             var updateAppointmentDTO = new UpdateAppointmentDTO

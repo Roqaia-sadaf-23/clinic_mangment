@@ -2,35 +2,53 @@ using Clinic_Application.Common.Interfaces;
 using Clinic_Flow.Authorization;
 using Clinic_Flow.UserService;
 using Clinic_Infrastructure;
+using Clinic_Infrastructure.BackgroundServices;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Threading.RateLimiting;
 using userEntity = Clinic_Domain.Entities.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#region MediatR
 
-builder.Services.AddMediatR( cfg =>
+builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(Clinic_Application.AssemblyReference).Assembly);
 });
 
-//Add services to the container.
+#endregion
+
+#region Database
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddDbContext<AppDbContext>();
-builder.Services.AddScoped<IPasswordHasher<userEntity>, PasswordHasher<userEntity>>();
+
 builder.Services.AddScoped<IAppDBContext>(sp =>
     sp.GetRequiredService<AppDbContext>());
 
+#endregion
+
+#region Dependency Injection
+
+builder.Services.AddScoped<IPasswordHasher<userEntity>, PasswordHasher<userEntity>>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+builder.Services.AddHttpContextAccessor();
+
+#endregion
+
+#region Authentication
 
 builder.Services.AddAuthentication(options =>
 {
@@ -55,96 +73,93 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+#endregion
 
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-
-
-
-builder.Services.AddSwaggerGen();
-
-// Register Swagger generator and customize its behavior.
-builder.Services.AddSwaggerGen(options =>
-{
-    // ===============================
-    // 1) Define the JWT Bearer security scheme
-    // ===============================
-    //
-    // This tells Swagger that our API uses JWT Bearer authentication
-    // through the HTTP Authorization header.
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        // The name of the HTTP header where the token will be sent.
-        Name = "Authorization",
-
-
-        // Indicates this is an HTTP authentication scheme.
-        Type = SecuritySchemeType.Http,
-
-
-        // Specifies the authentication scheme name.
-        // Must be exactly "Bearer" for JWT Bearer tokens.
-        Scheme = "Bearer",
-
-
-        // Optional metadata to describe the token format.
-        BearerFormat = "JWT",
-
-
-        // Specifies that the token is sent in the request header.
-        In = ParameterLocation.Header,
-
-
-        // Text shown in Swagger UI to guide the user.
-        Description = "Enter: Bearer {your JWT token}"
-    });
-
-
-    // ===============================
-    // 2) Require the Bearer scheme for secured endpoints
-    // ===============================
-    //
-    // This tells Swagger that endpoints protected by [Authorize]
-    // require the Bearer token defined above.
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                // Reference the previously defined "Bearer" security scheme.
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-
-
-            // No scopes are required for JWT Bearer authentication.
-            // This array is empty because JWT does not use OAuth scopes here.
-            new string[] {}
-        }
-    });
-});
-
-
+#region Authorization
 
 builder.Services.AddSingleton<IAuthorizationHandler, OwnerOrAdminHandler>();
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("OwnerOrAdmin", policy =>
         policy.Requirements.Add(new OwnerOrAdminRequirement()));
 });
 
-builder.Services.AddHttpContextAccessor();
+#endregion
 
-builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+#region Rate Limiting
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.AddPolicy("AuthLimiter", httpContext =>
+    {
+        var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: ip,
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            });
+    });
+});
+
+#endregion
+
+#region Background Services
+
+builder.Services.AddHostedService<AppointmentCleanupService>();
+
+#endregion
+
+#region Controllers
+
+builder.Services.AddControllers();
+
+#endregion
+
+#region Swagger
+
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter: Bearer {your JWT token}"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+#endregion
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+#region Middleware
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -153,9 +168,25 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRateLimiter();
+
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == StatusCodes.Status429TooManyRequests)
+    {
+        await context.Response.WriteAsync(
+            "Too many login attempts. Please try again later.");
+    }
+});
+
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+#endregion
 
 app.Run();

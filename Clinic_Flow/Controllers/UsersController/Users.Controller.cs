@@ -78,8 +78,8 @@ public async Task<IActionResult> Register([FromBody] CreateUserCommand command)
 
 
 
-            [Authorize]
-
+            
+        [Authorize]
         [HttpGet("{id}", Name = "GetUserById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace Clinic_Application.Features.people.Command.CreatePerson
 {
-    public sealed record CreatePersonCommand(string FirstName, string LastName, string NationalityNo, 
-        int? PhoneNumber, int? Age, string? Address, byte? Gender,
+    public sealed record CreatePersonCommand(string FirstName, string LastName, string NationalityNo,
+        string? PhoneNumber, int? Age, string? Address, byte Gender,
         int NationalityCountryId, string? ImagePath, string? Note) : IRequest<PersonDTO>;
     
 }

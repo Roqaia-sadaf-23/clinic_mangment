@@ -23,11 +23,11 @@ namespace Clinic_Flow.Controllers.Prescription
             [ProducesResponseType(StatusCodes.Status200OK)]
             [ProducesResponseType(StatusCodes.Status400BadRequest)]
             [ProducesResponseType(StatusCodes.Status404NotFound)]
-            public IActionResult GetPrescriptionInfo()
+            public async Task<IActionResult> GetPrescriptionInfo()
         {
 
             // Logic to get Prescription
-            var query = _mediator.Send(new GetAllPrescriptionInfoQuery());
+            var query = await _mediator.Send(new GetAllPrescriptionInfoQuery());
                 return query is null ? NotFound() : Ok(query);
             }
 

@@ -15,7 +15,7 @@ namespace Clinic_Application.DTOs.patient
         public string? BloodType { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
-        public int? PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
                 public int? Age { get; set; }
         public string? Note { get; set; } 
         public string? ImagePath { get; set; }

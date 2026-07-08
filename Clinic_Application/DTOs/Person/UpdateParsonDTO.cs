@@ -15,11 +15,11 @@ namespace Clinic_Application.DTOs.Person
 
         public string NationalityNo { get; set; } = null!;
 
-        public int? PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
         public int? Age { get; set; }
         public string? Address { get; set; }
 
-        public byte? Gender { get; set; }
+        public byte Gender { get; set; }
 
         public int NationalityCountryId { get; set; }
         //   public Country Country { get; set; }

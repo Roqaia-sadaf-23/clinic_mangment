@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Common\Errors\" />
-    <Folder Include="Common\NewFolder\" />
   </ItemGroup>
 
 

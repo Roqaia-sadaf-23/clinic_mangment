@@ -35,8 +35,12 @@ namespace Clinic_Flow.Controllers
                 {
                     await file.CopyToAsync(stream);
                 }
-                return Ok(new { FilePath });
-            }
+            // return Ok(new { FilePath });
+            return Ok(new
+            {
+                imageName = fillName
+            });
+        }
 
 
 

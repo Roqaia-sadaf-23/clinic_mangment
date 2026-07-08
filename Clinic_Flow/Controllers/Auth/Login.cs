@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.RateLimiting;
+
 
 namespace Clinic_Flow.Controllers.Auth
 {
@@ -27,7 +29,7 @@ namespace Clinic_Flow.Controllers.Auth
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-
+        [EnableRateLimiting("AuthLimiter")]
 
         public async Task<IActionResult> Login(loginCommand command)
         {
@@ -49,7 +51,7 @@ namespace Clinic_Flow.Controllers.Auth
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-
+        [EnableRateLimiting("AuthLimiter")]
         public async Task<IActionResult> Refresh([FromBody] Refreshcommand request)
         { 
 

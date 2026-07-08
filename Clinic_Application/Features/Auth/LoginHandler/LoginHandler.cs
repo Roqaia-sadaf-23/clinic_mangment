@@ -90,7 +90,7 @@ namespace Clinic_Application.Features.Auth.LoginHandler
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
+                expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds
             );
 
@@ -103,7 +103,10 @@ namespace Clinic_Application.Features.Auth.LoginHandler
                     UserId = user.Id,
                     Token = BCrypt.Net.BCrypt.HashPassword(refreshToken),
                     ExpiresAt = DateTime.UtcNow.AddDays(7),
-                    RevokedAt = null
+                    RevokedAt = null,
+                    CreatedAt = DateTime.UtcNow
+                  
+
                 };
 
                 await _context.RefreshTokens.AddAsync(retoken, cancellationToken);

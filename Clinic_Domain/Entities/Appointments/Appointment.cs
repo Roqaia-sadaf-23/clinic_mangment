@@ -10,11 +10,11 @@ public partial class Appointment
 {
     public int Id { get; set; }
 
-    public int DoctorId { get; set; }
-    public Doctor Doctor { get; set; }
-    public int PatientId { get; set; }
-    public Patient Patient { get; set; }
-    public DateTime AppointmentDate { get; set; }
+    public int DoctorId { get;private set; }
+    public Doctor Doctor { get;private set; }
+    public int PatientId { get; private set; }
+    public Patient Patient { get; private set; }
+    public DateTime AppointmentDate { get; private set; }
 
     // public int? Status { get; set; }
     public AppointmentStatus AppointmentStatus { get; private set; }
@@ -44,23 +44,23 @@ public partial class Appointment
     }
   
     
-    public DateTime LastStatusDate { get; set; }
+    public DateTime LastStatusDate { get; private set; }
 
-    public int? MedicalRecordId { get; set; }
+    public int? MedicalRecordId { get; private set; }
     //public MedicalRecord? MedicalRecord { get; set; }
-    public string? Notes { get; set; }
+    public string? Notes { get; private set; }
 
-    public DateTimeOffset? CreatedAt { get; set; }
+    public DateTimeOffset? CreatedAt { get; private set; }
 
-    public int? CreatedByUserId { get; set; }
+    public int? CreatedByUserId { get; private set; }
  //   public User User { get; set; }
-    public DateTimeOffset? LastModifiedAt { get; set; }
+    public DateTimeOffset? LastModifiedAt { get; private set; }
 
-    public string? LastModifiedBy { get; set; }
+    public string? LastModifiedBy { get; private set; }
 
-    public int DurationInMinutes { get; set; } = 40;
+    public int DurationInMinutes { get; private set; } = 40;
 
-    public virtual ICollection<MedicalRecord> MedicalRecords { get; set; } = new List<MedicalRecord>();
+    public virtual ICollection<MedicalRecord> MedicalRecords { get;private set; } = new List<MedicalRecord>();
 
 
     private Appointment() { }
@@ -96,7 +96,8 @@ public partial class Appointment
     {
         DoctorId = doctorId;
         PatientId = patientId;
-        AppointmentDate = appointmentDate;
+        if (appointmentDate < DateTime.Now)
+            throw new ArgumentException("Appointment date cannot be in the past.");
         Notes = notes;
 
     }

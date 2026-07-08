@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Clinic_Infrastructure;
 
-public   class AppDbContext : DbContext, IAppDBContext
+public class AppDbContext : DbContext, IAppDBContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)

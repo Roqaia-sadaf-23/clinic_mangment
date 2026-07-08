@@ -8,12 +8,13 @@ using Clinic_Application.Features.Doctor.Queries.GetDoctorByName;
 using Clinic_Application.Features.Patients.Queries.GetPatientById;
 using Clinic_Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Clinic_Flow.Controllers.Doctors
 {
-  //  [Authorize]
+  // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
      
@@ -49,12 +50,12 @@ namespace Clinic_Flow.Controllers.Doctors
             // Logic to get doctor by id
 
 
-            var patient = await _mediator.Send(new GetDoctorByIdQuery(id));
+            var doctor = await _mediator.Send(new GetDoctorByIdQuery(id));
 
-            if (patient.UserId.ToString() != currentUserId && !User.IsInRole("Admin"))
-                return Forbid();
+            //if (doctor.UserId.ToString() != currentUserId && !User.IsInRole("Admin"))
+            //    return Forbid();
 
-            return Ok(patient);
+            return Ok(doctor);
 
 
 
