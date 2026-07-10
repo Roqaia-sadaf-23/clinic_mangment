@@ -1,4 +1,8 @@
 using Clinic_Application.Common.Interfaces;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Clinic_Flow.Authorization;
 using Clinic_Flow.UserService;
 using Clinic_Infrastructure;
@@ -11,6 +15,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.RateLimiting;
 using userEntity = Clinic_Domain.Entities.User;
@@ -57,6 +62,43 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    // JWT Events
+    options.Events = new JwtBearerEvents
+    {
+        // Invalid / Expired token
+        OnAuthenticationFailed = context =>
+        {
+            var logger = context.HttpContext.RequestServices
+                .GetRequiredService<ILogger<Program>>();
+
+            logger.LogWarning(
+                context.Exception,
+                "JWT authentication failed. Path={Path}, IP={IP}",
+                context.HttpContext.Request.Path,
+                context.HttpContext.Connection.RemoteIpAddress);
+
+            return Task.CompletedTask;
+        },
+
+        // Authenticated but not authorized
+        OnForbidden = context =>
+        {
+            var logger = context.HttpContext.RequestServices
+                .GetRequiredService<ILogger<Program>>();
+
+            var userId = context.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)
+                         ?? "anonymous";
+
+            logger.LogWarning(
+                "Forbidden access. UserId={UserId}, Path={Path}, IP={IP}",
+                userId,
+                context.HttpContext.Request.Path,
+                context.HttpContext.Connection.RemoteIpAddress);
+
+            return Task.CompletedTask;
+        }
+    };
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -69,7 +111,10 @@ builder.Services.AddAuthentication(options =>
 
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
-        )
+        ),
+
+        // Don't allow the default 5-minute clock skew
+        ClockSkew = TimeSpan.Zero
     };
 });
 

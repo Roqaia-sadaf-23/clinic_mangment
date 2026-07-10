@@ -1,15 +1,17 @@
-﻿using Clinic_Application.DTOs.Auth;
+﻿using Azure.Core;
+using Clinic_Application.DTOs.Auth;
 using Clinic_Application.Features.Auth.LoginCommand;
 using Clinic_Application.Features.Auth.logout;
 using Clinic_Application.Features.Auth.RefreshComand;
 using MediatR;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.RateLimiting;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 
 namespace Clinic_Flow.Controllers.Auth
@@ -20,9 +22,11 @@ namespace Clinic_Flow.Controllers.Auth
     {
 
         private readonly IMediator _mediator;
-        public AuthController(IMediator mediator)
+        private readonly ILogger<AuthController> _logger;
+        public AuthController(IMediator mediator, ILogger<AuthController> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         [HttpPost("login")]
@@ -33,10 +37,16 @@ namespace Clinic_Flow.Controllers.Auth
 
         public async Task<IActionResult> Login(loginCommand command)
         {
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
             var token = await _mediator.Send(command);
 
             if (token == null)
             {
+                _logger.LogWarning(
+$"Failed login attempt (email or username not found). email or username={command.login}, IP={ip}",
+command.login, ip);
+             
+
                 return Unauthorized("Invalid credentials");
             }
 
@@ -53,11 +63,17 @@ namespace Clinic_Flow.Controllers.Auth
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [EnableRateLimiting("AuthLimiter")]
         public async Task<IActionResult> Refresh([FromBody] Refreshcommand request)
-        { 
+        {
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
 
             var result = await _mediator.Send(request);
             if(!result.IsSuccess)
             {
+                _logger.LogWarning(
+                   $"Failed login attempt (email or username not found). email or username={request.Email}, IP={ip}",
+                                request.Email, ip);
+
                 return BadRequest(result.Error);
             }       
 
@@ -74,7 +90,7 @@ namespace Clinic_Flow.Controllers.Auth
         public async Task<IActionResult> Logout([FromBody] LogoutCommand command)
         {
             var result = await _mediator.Send(command);
-
+            
             return Ok(result);
         }
     }
