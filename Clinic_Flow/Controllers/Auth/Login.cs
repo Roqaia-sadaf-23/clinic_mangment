@@ -50,10 +50,7 @@ command.login, ip);
                 return Unauthorized("Invalid credentials");
             }
 
-            return Ok(new 
-            {
-                token
-            });
+            return Ok(token);
         }
 
         

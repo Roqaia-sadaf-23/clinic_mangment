@@ -79,7 +79,7 @@ public async Task<IActionResult> Register([FromBody] CreateUserCommand command)
 
 
             
-        [Authorize]
+      //  [Authorize]
         [HttpGet("{id}", Name = "GetUserById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -89,13 +89,13 @@ public async Task<IActionResult> Register([FromBody] CreateUserCommand command)
 
 
            
-                var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                //var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                if (currentUserId == null)
-                    return Unauthorized();
+                //if (currentUserId == null)
+                //    return Unauthorized();
 
-                if (currentUserId != id.ToString() && !User.IsInRole("Admin"))
-                    return Forbid();
+                //if (currentUserId != id.ToString() && !User.IsInRole("Admin"))
+                //    return Forbid();
 
                 var result = await _mediator.Send(new GetUserByIdQuery(id));
 

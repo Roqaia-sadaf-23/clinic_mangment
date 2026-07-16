@@ -7,6 +7,7 @@ using Clinic_Application.Features.Doctor.Queries.GetDoctorByID;
 using Clinic_Application.Features.Doctor.Queries.GetDoctorByName;
 using Clinic_Application.Features.Patients.Queries.GetPatientById;
 using Clinic_Domain.Entities;
+using Clinic_Flow.Controllers.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,11 +23,14 @@ namespace Clinic_Flow.Controllers.Doctors
     {
 
         private readonly IMediator _mediator;
-        public DoctorsController(IMediator mediator)
+        private readonly ILogger<DoctorsController> _logger;
+
+        public DoctorsController(IMediator mediator, ILogger<DoctorsController> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
-
+        // GET api/doctors
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -38,6 +42,7 @@ namespace Clinic_Flow.Controllers.Doctors
             return query is null? NotFound(): Ok(query);
         }
 
+        // GET api/doctors/{id}
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -62,6 +67,8 @@ namespace Clinic_Flow.Controllers.Doctors
             //var query = await _mediator.Send(new GetDoctorByIdQuery(id));
             //return query is null ? NotFound() : Ok(query);
         }
+
+        // GET api/doctors/by-name/{name}
 
         [HttpGet("by-name/{name}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -91,22 +98,30 @@ namespace Clinic_Flow.Controllers.Doctors
 
         }
 
-        [HttpPost("create")]
+
+
+
+        //create doctor
+
+        
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Admin,Doctor")]
+        [HttpPost("create")]
         public async Task<ActionResult<DoctorDTO>> Create(
-         [FromBody] CreateDoctorCommand command,
-           CancellationToken cancellationToken)
+    [FromBody] CreateDoctorCommand command,
+    CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(command, cancellationToken);
+            var result = await _mediator.Send(
+                command,
+                cancellationToken);
 
             if (result is null)
                 return BadRequest();
 
             return Ok(result);
         }
-
 
 
 
@@ -128,21 +143,54 @@ namespace Clinic_Flow.Controllers.Doctors
 
 
 
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete(("{id:int}"))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+            var adminId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "unknown";
 
+            if (id < 0)
+            {
+                _logger.LogWarning(
+         "Admin action blocked (invalid id). AdminId={AdminId}, Action=DeleteStudent, TargetId={TargetId}, IP={IP}",
+         adminId,
+         id,
+         ip);
+
+                return BadRequest($"Not accepted ID {id}");
+            }
             var command = new DeleteDoctorCommand(id);
 
             var result = await _mediator.Send(command);
             if (!result )
             {
+                _logger.LogWarning(
+            "Admin action blocked (invalid id). AdminId={AdminId}, Action=Deletedoctor, TargetId={TargetId}, IP={IP}",
+            adminId,
+            id,
+            ip);
+
+                _logger.LogWarning(
+          "Admin action failed (target not found). AdminId={AdminId}, Action=Deletedoctor, TargetId={TargetId}, IP={IP}",
+          adminId,
+          id,
+          ip
+      );
+
+
                 return BadRequest(result);
             }
+
+            _logger.LogInformation(
+         "Admin action succeeded. AdminId={AdminId}, Action=Deletedoctor, TargetId={TargetId}, IP={IP}",
+         adminId,
+         id,
+         ip
+     );
             return Ok(result);
         }
 

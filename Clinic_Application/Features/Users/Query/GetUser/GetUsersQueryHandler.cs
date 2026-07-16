@@ -30,6 +30,7 @@ namespace Clinic_Application.Features.Users.Query.GetUser
                     (x, person) => new UserDTO
                     {
                         Id = x.user.Id,
+                        PersonId=person.ID,
                         UserName = x.user.UserName,
                         Email = x.user.Email,
                         IsActive = x.user.IsActive,

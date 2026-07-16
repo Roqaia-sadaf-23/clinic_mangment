@@ -2,6 +2,7 @@
 using Clinic_Application.DTOs.Doctor;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,16 @@ namespace Clinic_Application.Features.Doctor.Command.CreateDoctor
             if (!personExists)
                 throw new Exception($"Person with Id {request.PersonId} not found");
 
+            var doctorExists = await context.Doctors
+                                   .AnyAsync(
+             doctor => doctor.PersonId == request.PersonId,
+            cancellationToken);
 
+            if (doctorExists)
+            {
+                throw new InvalidOperationException(
+                    $"A doctor profile already exists for PersonId {request.PersonId}.");
+            }
 
             var doctor = DoctorEntity.Create(request.Specialty, request.Hiredate, request.PersonId, request.ExperienceYear);
             context.Doctors.Add(doctor);
@@ -32,7 +42,9 @@ namespace Clinic_Application.Features.Doctor.Command.CreateDoctor
                 Id = doctor.Id,
                 Specialty = doctor.Specialty,
                 HireDate = doctor.HireDate,
-                PersonId = doctor.PersonId
+                PersonId = doctor.PersonId,
+                experienceYear=doctor.ExperienceYears
+                
             });
         }
     }
