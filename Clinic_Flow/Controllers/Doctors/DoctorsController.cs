@@ -2,6 +2,7 @@
 using Clinic_Application.Features.Doctor.Command.CreateDoctor;
 using Clinic_Application.Features.Doctor.Command.DeleteDoctor;
 using Clinic_Application.Features.Doctor.Command.UpdateDoctor;
+using Clinic_Application.Features.Doctor.Queries.GetCurrentDoctor;
 using Clinic_Application.Features.Doctor.Queries.GetDoctor_;
 using Clinic_Application.Features.Doctor.Queries.GetDoctorByID;
 using Clinic_Application.Features.Doctor.Queries.GetDoctorByName;
@@ -43,29 +44,41 @@ namespace Clinic_Flow.Controllers.Doctors
         }
 
         // GET api/doctors/{id}
-
+        [Authorize(Roles = "Admin,Doctor")]
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-                public  async Task<IActionResult> GetDoctorById(int id)
+        public async Task<IActionResult> GetDoctorById(
+            int id,
+            CancellationToken cancellationToken)
         {
-            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (id <= 0)
+                return BadRequest("Invalid doctor ID.");
 
-            // Logic to get doctor by id
+            var currentUserIdValue =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            if (!int.TryParse(currentUserIdValue, out var currentUserId))
+                return Unauthorized();
 
-            var doctor = await _mediator.Send(new GetDoctorByIdQuery(id));
+            var doctor = await _mediator.Send(
+                new GetDoctorByIdQuery(id),
+                cancellationToken
+            );
 
-            //if (doctor.UserId.ToString() != currentUserId && !User.IsInRole("Admin"))
-            //    return Forbid();
+            if (doctor is null)
+                return NotFound("Doctor was not found.");
+
+            var ownsProfile = doctor.UserId == currentUserId;
+            var isAdmin = User.IsInRole("Admin");
+
+            if (!ownsProfile && !isAdmin)
+                return Forbid();
 
             return Ok(doctor);
-
-
-
-            //var query = await _mediator.Send(new GetDoctorByIdQuery(id));
-            //return query is null ? NotFound() : Ok(query);
         }
 
         // GET api/doctors/by-name/{name}
@@ -122,6 +135,39 @@ namespace Clinic_Flow.Controllers.Doctors
 
             return Ok(result);
         }
+
+
+
+        [Authorize(Roles = "Doctor")]
+        [HttpGet("me")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCurrentDoctor(
+        CancellationToken cancellationToken)
+        {
+            var userIdValue =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(userIdValue, out var userId))
+                return Unauthorized();
+
+            var doctor = await _mediator.Send(
+                new GetDoctorByUserIdQuery(userId),
+                cancellationToken
+            );
+
+            if (doctor is null)
+                return NotFound("Doctor profile was not found.");
+
+            return Ok(doctor);
+        }
+
+
+
+
+
+
 
 
 

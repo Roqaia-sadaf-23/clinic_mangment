@@ -160,6 +160,7 @@ namespace Clinic_Application.Features.Auth.LoginHandler
                 IsSuccess = true,
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
+                RoleName= roleName,
                 Message = "Login successful."
             };
         }

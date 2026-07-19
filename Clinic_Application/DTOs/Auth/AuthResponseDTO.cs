@@ -8,6 +8,7 @@ namespace Clinic_Application.DTOs.Auth
         public bool IsSuccess { get; set; }
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
+        public string RoleName { get; set; } = string.Empty;
         public string? Message { get; set; }
     }
 }

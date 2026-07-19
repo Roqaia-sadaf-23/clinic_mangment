@@ -3,14 +3,17 @@ using Clinic_Application.DTOs.Auth;
 using Clinic_Application.Features.Auth.LoginCommand;
 using Clinic_Application.Features.Auth.logout;
 using Clinic_Application.Features.Auth.RefreshComand;
+using Clinic_Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
+
+using System.Security.Claims;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 
@@ -53,7 +56,10 @@ command.login, ip);
             return Ok(token);
         }
 
-        
+
+
+
+
         [HttpPost("refreshtoken")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
