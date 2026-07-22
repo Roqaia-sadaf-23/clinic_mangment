@@ -26,12 +26,17 @@ public sealed class CreateAppointmentHandler(IAppDBContext context, ICurrentUser
 
             var user = await context.Users
                 .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
-
+            if(user == null) {
+                throw new ArgumentException("User not found.");
+            }
             var patientId = await context.Patients
                 .Where(p => p.PersonId == user.PersonId)
                 .Select(p => p.Id)
                 .FirstOrDefaultAsync(cancellationToken);
-
+            if (patientId == 0)
+            {
+                throw new ArgumentException("Patient not found for the current user.");
+            }
             // 1- لا يسمح بتاريخ في الماضي
             if (request.AppointmentDate < DateTime.Now)
                 throw new ArgumentException("Appointment date cannot be in the past.");

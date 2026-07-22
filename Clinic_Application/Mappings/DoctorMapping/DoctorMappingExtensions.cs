@@ -28,14 +28,14 @@ namespace Clinic_Application.Mappings.DoctorMapping
             );
         }
 
-        public static void UpdateEntity(this UpdateDoctorDTO dto, Doctor doctor)
-        {
-            doctor.Update(
-                dto.Specialty,
+        //public static void UpdateEntity(this UpdateDoctorDTO dto, Doctor doctor)
+        //{
+        //    doctor.Update(
+        //        dto.Specialty,
            
-                dto.PersonId,
-                dto.ExperienceYears
-            );
-        }
+        //        dto.PersonId,
+        //        dto.ExperienceYears
+        //    );
+        //}
     }
 }

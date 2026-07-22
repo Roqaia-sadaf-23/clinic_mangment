@@ -13,7 +13,7 @@ namespace Clinic_Application.DTOs.Appintment
     public class CreateAppointmentDTO
     {
         public int DoctorId { get; set; }
-        public int PatientId { get; set; }
+       // public int PatientId { get; set; }
         public DateTime AppointmentDate { get; set; }
         //public int DurationInMinutes { get; set; }
         public string? Notes { get; set; }

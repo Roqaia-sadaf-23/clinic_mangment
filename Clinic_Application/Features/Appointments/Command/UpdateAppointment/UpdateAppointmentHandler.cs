@@ -27,20 +27,20 @@ namespace Clinic_Application.Features.Appointments.Command.UpdateAppointment
                 throw new NotFoundException();
 
             }
-
-            appointment.Update(request.DoctorId, request.PatientId, request.AppointmentDate, request.Notes);
-            //   appointment.DoctorId = request.DoctorId;
-            //   appointment.PatientId = request.PatientId;
-            //   appointment.AppointmentDate = request.AppointmentDate;
-            ////   appointment.DurationInMinutes = request.DurationInMinutes;
-            //   appointment.Notes = request.Notes;
-            _context.Appointments.Update(appointment);
-            await _context.SaveChangesAsync(cancellationToken);
+////request.PatientId,
+//            appointment.Update(request.DoctorId,  request.AppointmentDate, request.Notes);
+//            //   appointment.DoctorId = request.DoctorId;
+//            //   appointment.PatientId = request.PatientId;
+//            //   appointment.AppointmentDate = request.AppointmentDate;
+//            ////   appointment.DurationInMinutes = request.DurationInMinutes;
+//            //   appointment.Notes = request.Notes;
+//            _context.Appointments.Update(appointment);
+//            await _context.SaveChangesAsync(cancellationToken);
 
             var updateAppointmentDTO = new UpdateAppointmentDTO
             {
                 DoctorId = appointment.DoctorId,
-                PatientId = appointment.PatientId,
+            //    PatientId = appointment.PatientId,
                 AppointmentDate = appointment.AppointmentDate,
                 Notes = appointment.Notes
             };

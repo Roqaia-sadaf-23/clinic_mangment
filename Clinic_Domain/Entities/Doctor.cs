@@ -61,7 +61,7 @@ public partial class Doctor
         Specialty = specialty;
     }
 
-    public void Update(string specialty, int Personid,int? experienceYears)
+    public void Update(string specialty, int Personid, int? experienceYears)
     {
 
         if (string.IsNullOrWhiteSpace(specialty))
@@ -72,6 +72,46 @@ public partial class Doctor
 
         Specialty = specialty;
         PersonId = Personid;
+        ExperienceYears = experienceYears;
+    }
+
+    public void UpdateDoctorInfo(
+        string specialty,
+        string firstName,
+        string lastName,
+        int? age,
+        string? note,
+        int? experienceYears)
+    {
+
+
+
+        if (string.IsNullOrWhiteSpace(specialty))
+            throw new ArgumentException("Specialty is required.", nameof(specialty));
+
+        if (string.IsNullOrWhiteSpace(firstName))
+            throw new ArgumentException("First name is required.", nameof(firstName));
+
+        if (string.IsNullOrWhiteSpace(lastName))
+            throw new ArgumentException("Last name is required.", nameof(lastName));
+
+        if (age is <= 0)
+            throw new ArgumentException("Age must be greater than 0.", nameof(age));
+
+        if (experienceYears is < 0)
+            throw new ArgumentException(
+                "Experience years cannot be negative.",
+                nameof(experienceYears));
+
+        if (Person is null)
+            throw new InvalidOperationException("Doctor person information is missing.");
+
+        Specialty = specialty.Trim();
+        Person.FirstName = firstName.Trim();
+        Person.LastName = lastName.Trim();
+        Person.Age = age;
+        Person.Note = note?.Trim();
+
         ExperienceYears = experienceYears;
     }
 }

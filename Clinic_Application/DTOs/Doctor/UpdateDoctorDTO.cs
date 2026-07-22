@@ -9,12 +9,13 @@ namespace Clinic_Application.DTOs.Doctor
 
     public class UpdateDoctorDTO
     {
-       // public int Id { get; set; }
-        public string Specialty { get; set; } = string.Empty;
-       // public DateTime? HireDate { get; set; }
+        // public int Id { get; set; }
        
-        public int PersonId { get; set; } 
-        
-        public int? ExperienceYears { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public int? Age { get; set; }
+        public string? Note { get; set; }
+        public int? experienceYears { get; set; }
+        public string? Specialization { get; set; } = null;
     }
 }

@@ -92,15 +92,15 @@ public partial class Appointment
         return new Appointment(doctorId, patientId, appointmentDate,notes,userId);
     }
 
-    public void Update(int doctorId, int patientId, DateTime appointmentDate, string? notes)
-    {
-        DoctorId = doctorId;
-        PatientId = patientId;
-        if (appointmentDate < DateTime.Now)
-            throw new ArgumentException("Appointment date cannot be in the past.");
-        Notes = notes;
+    //public void Update(int doctorId, int patientId, DateTime appointmentDate, string? notes)
+    //{
+    //    DoctorId = doctorId;
+    //    PatientId = patientId;
+    //    if (appointmentDate < DateTime.Now)
+    //        throw new ArgumentException("Appointment date cannot be in the past.");
+    //    Notes = notes;
 
-    }
+    //}
     public void Reschedule(DateTime newDate)
     {
         if (newDate < DateTime.Now)

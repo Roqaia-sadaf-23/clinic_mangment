@@ -9,10 +9,13 @@ using System.Threading.Tasks;
 namespace Clinic_Application.Features.Doctor.Command.UpdateDoctor
 {
     public sealed record UpdateDoctorCommand(
-        int Id,
-        string Specialty,
-        int PersonId,
-       
-        int? ExperienceYears
+       int UserId,
+        string firstName,
+        string lastName,
+        int? Age,
+        string? Note,
+      
+        int? ExperienceYears,
+        string Specialization
         ) : IRequest<UpdateDoctorDTO>;
 }

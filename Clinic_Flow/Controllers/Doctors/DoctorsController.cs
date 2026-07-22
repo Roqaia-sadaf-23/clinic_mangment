@@ -170,17 +170,23 @@ namespace Clinic_Flow.Controllers.Doctors
 
 
 
-
-        [HttpPut("{id}", Name = "UpdateDoctor")]
+        [Authorize (Roles ="Doctor,admin")]
+        [HttpPut("updateme", Name = "UpdateDoctor")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(int id, UpdateDoctorDTO request)
+        public async Task<IActionResult> Update( UpdateDoctorDTO request)
         {
-            var command = new UpdateDoctorCommand(id, request.Specialty, request.PersonId, request.ExperienceYears);
+            var userIdValue =
+            User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        var result=   await _mediator.Send(command);
-            if(result is null)
+            if (!int.TryParse(userIdValue, out var userId))
+                return Unauthorized();
+
+            var command = new UpdateDoctorCommand(userId, request.firstName, request.lastName, request.Age, request.Note, request.experienceYears,request.Specialization);
+
+            var result = await _mediator.Send(command);
+            if (result is null)
             {
                 return BadRequest(result);
             }

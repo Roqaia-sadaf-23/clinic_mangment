@@ -14,10 +14,7 @@ namespace Clinic_Application.Features.Appointments.Command.UpdateAppointment
         {
             RuleFor(x => x.DoctorId)
                 .NotEmpty().WithMessage("DoctorID is required.");
-
-            RuleFor(x => x.PatientId)
-                .NotEmpty().WithMessage("PatientID is required.");
-
+             
             RuleFor(x => x.AppointmentDate)
                 .NotEmpty().WithMessage("AppointmentDate is required.")
                 .GreaterThan(DateTime.Now).WithMessage("AppointmentDate must be in the future.")

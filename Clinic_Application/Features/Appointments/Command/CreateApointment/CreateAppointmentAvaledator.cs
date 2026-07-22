@@ -15,10 +15,7 @@ namespace Clinic_Application.Features.Appointments.Command.CreateApointment
 		{ 
 		DoctorID.NotEmpty().WithMessage("DoctorID is required.");	
 
-			PatientID.NotEmpty().WithMessage("PatientID is required.");
 
-			AppointmentDate.NotEmpty().WithMessage("AppointmentDate is required.")
-				.GreaterThan(DateTime.Now).WithMessage("AppointmentDate must be in the future.");
 
 
 			RuleFor(x => x.AppointmentDate)

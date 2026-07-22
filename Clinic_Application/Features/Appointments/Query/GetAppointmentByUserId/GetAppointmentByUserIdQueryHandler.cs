@@ -21,19 +21,30 @@ namespace Clinic_Application.Features.Appointments.Query.GetAppointmentByUserId
             var user = await context.Users
                 .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
 
-            if (user == null)
-                return new List<AppointmentDTO>();
+            if (user == null) {
 
+
+                throw new Exception($"User with ID {request.UserId} not found.");
+            }
+                
             var patientId = await context.Patients
                 .Where(p => p.PersonId == user.PersonId)
                 .Select(p => (int?)p.Id)
                 .FirstOrDefaultAsync(cancellationToken);
-
+            if(patientId == null)
+            {
+                throw new Exception($"Patient with Person ID {user.PersonId} not found.");
+            }
             var doctorId = await context.Doctors
                 .Where(d => d.PersonId == user.PersonId)
                 .Select(d => (int?)d.Id)
                 .FirstOrDefaultAsync(cancellationToken);
 
+
+            if(doctorId == null)
+            {
+                throw new Exception($"Doctor with Person ID {user.PersonId} not found.");
+            }
             var appointments = await context.Appointments
      .Where(a =>
          (patientId != null && a.PatientId == patientId.Value) ||

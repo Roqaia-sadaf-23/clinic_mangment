@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Clinic_Domain.Entities;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace Clinic_Application.Features.Appointments.Command.CancelAppointment
 {
-    public sealed record CancelAppointmentCommand(int AppointmentId)
+    public sealed record CancelAppointmentCommand(int AppointmentId,int userId)
     : IRequest<bool>;
 }

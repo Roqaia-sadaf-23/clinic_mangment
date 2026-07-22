@@ -15,8 +15,12 @@ namespace Clinic_Application.Features.Doctor.Command.UpdateDoctor
 
 
 
-            RuleFor(x => x.Specialty).NotEmpty().WithMessage("Specialty is required.");
-            RuleFor(x => x.PersonId).GreaterThan(0).WithMessage("PersonId must be greater than 0.");
+            RuleFor(x => x.Specialization).NotEmpty().WithMessage("Specialty is required.");
+            RuleFor(x => x.firstName).NotEmpty().WithMessage("First name is required.");
+            RuleFor(x => x.lastName).NotEmpty().WithMessage("Last name is required.");
+            RuleFor(x => x.Age).GreaterThan(0).WithMessage("Age must be greater than 0.");
+            RuleFor(x => x.ExperienceYears).GreaterThanOrEqualTo(0).WithMessage("Experience years must be greater than or equal to 0.");
+                
         }
     }
 }

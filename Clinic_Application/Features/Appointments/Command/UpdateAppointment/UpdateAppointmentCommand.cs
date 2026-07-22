@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Clinic_Application.Features.Appointments.Command.UpdateAppointment
 {
-    public sealed record class UpdateAppointmentCommand(int Id,int DoctorId,int PatientId,
+    public sealed record class UpdateAppointmentCommand(int Id,int userId ,int DoctorId,
         DateTime AppointmentDate,string? Notes) : IRequest<UpdateAppointmentDTO>
     {
     }

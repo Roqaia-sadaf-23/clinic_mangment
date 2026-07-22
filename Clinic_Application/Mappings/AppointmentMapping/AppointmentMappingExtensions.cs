@@ -38,13 +38,13 @@ namespace Clinic_Application.Mappings.AppointmentMapping;
     //    );
     //}
 
-        public static void UpdateEntity(this UpdateAppointmentDTO dto, Appointment appointment)
-        {
-            appointment.Update(
-                dto.DoctorId,
-                dto.PatientId,
-                dto.AppointmentDate,
-                dto.Notes
-            );
-        }
+        //public static void UpdateEntity(this UpdateAppointmentDTO dto, Appointment appointment)
+        //{
+        //    appointment.Update(
+        //        dto.DoctorId,
+        //        dto.PatientId,
+        //        dto.AppointmentDate,
+        //        dto.Notes
+        //    );
+        //}
     }
