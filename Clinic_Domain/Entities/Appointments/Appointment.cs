@@ -48,7 +48,7 @@ public partial class Appointment
 
     public int? MedicalRecordId { get; private set; }
     //public MedicalRecord? MedicalRecord { get; set; }
-    public string? Notes { get; private set; }
+   // public string? Notes { get; private set; }
 
     public DateTimeOffset? CreatedAt { get; private set; }
 
@@ -65,13 +65,13 @@ public partial class Appointment
 
     private Appointment() { }
    
-    private Appointment(int doctorId, int patientId, DateTime appointmentDate,  string? notes,int? userId)
+    private Appointment(int doctorId, int patientId, DateTime appointmentDate, int? userId)
     {
         DoctorId = doctorId;
         PatientId = patientId;
         AppointmentDate = appointmentDate;
       //  DurationInMinutes = durationInMinutes;
-        Notes = notes;
+      //  Notes = notes;
         AppointmentStatus = AppointmentStatus.Pending;
         CreatedByUserId = userId;
         LastStatusDate = DateTime.Now;
@@ -89,7 +89,7 @@ public partial class Appointment
         if (appointmentDate < DateTime.Now)
             throw new ArgumentException("Appointment date cannot be in the past.");
 
-        return new Appointment(doctorId, patientId, appointmentDate,notes,userId);
+        return new Appointment(doctorId, patientId, appointmentDate,userId);
     }
 
     //public void Update(int doctorId, int patientId, DateTime appointmentDate, string? notes)
@@ -121,10 +121,10 @@ public partial class Appointment
         LastStatusDate = DateTime.Now;
     }
 
-    public void UpdateNotes(string? notes)
-    {
-        Notes = notes;
-    }
+    //public void UpdateNotes(string? notes)
+    //{
+    //    Notes = notes;
+    //}
 
     public void AttachMedicalRecord(int medicalRecordId)
     {

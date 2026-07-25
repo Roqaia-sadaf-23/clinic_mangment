@@ -46,7 +46,7 @@ namespace Clinic_Application.Features.Appointments.Query.GetDoctorAppointmentSum
             }
 
 
-            var appointments = await _context.Appointments
+            var appointments = await _context.Appointments.AsNoTracking()
                 .Where(a => a.DoctorId == doctor.Id)
                 .ToListAsync(cancellationToken);
 

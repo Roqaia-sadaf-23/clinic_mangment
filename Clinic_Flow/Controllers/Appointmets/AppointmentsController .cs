@@ -5,18 +5,17 @@ using Clinic_Application.Features.Appointments.Command.CreateApointment;
 using Clinic_Application.Features.Appointments.Command.DeleteAppointment;
 using Clinic_Application.Features.Appointments.Command.UpdateAppointment;
 using Clinic_Application.Features.Appointments.Query.GetAppointmentById;
-using Clinic_Application.Features.Appointments.Query.GetAppointmentByUserId;
+using Clinic_Application.Features.Appointments.Query.GetAppointmentByUserIdDoctors;
 using Clinic_Application.Features.Appointments.Query.GetAvailableSlots;
-using Clinic_Application.Features.Appointments.Query.GetCountAppointmentByDoctorId;
+using Clinic_Application.Features.Appointments.Query.GetDoctorAppointmentSummary;
 using Clinic_Application.Features.Appointments.Query.GetPendingAppointment;
-using Clinic_Domain.Common.Results;
+using Clinic_Application.Features.Appointments.Query.TodayDoctorAppointments;
+using Clinic_Application.Features.Appointments.Query.GetAppointmentByUserIdPatients;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Clinic_Application.Features.Appointments.Query.GetDoctorAppointmentSummary;
-
-
+using Clinic_Application.Features.Appointments.Query.GetDoctorPatients;
 namespace Clinic_Flow.Controllers.Appointments
 {
 
@@ -62,8 +61,8 @@ namespace Clinic_Flow.Controllers.Appointments
         // مناسب للمريض، ويمكن للـHandler تحديد نوع المستخدم
         // =========================================================
 
-        [Authorize]
-        [HttpGet("me")]
+        [Authorize(Roles = "Patient")]
+        [HttpGet("patient/me")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetMyAppointments(
@@ -79,7 +78,7 @@ namespace Clinic_Flow.Controllers.Appointments
             }
 
             var result = await _mediator.Send(
-                new GetAppointmentByUserIdQuery(userId),
+                new GetAppointmentByUserIdPatientsQuery(userId),
                 cancellationToken);
 
             return Ok(result);
@@ -125,7 +124,7 @@ namespace Clinic_Flow.Controllers.Appointments
                 return Unauthorized();
 
             var result = await _mediator.Send(
-               // new GetTodayDoctorAppointmentsQuery(userId),
+                new GetTodayDoctorAppointmentsQuery(userId),
                 cancellationToken);
 
             return Ok(result);
@@ -135,38 +134,38 @@ namespace Clinic_Flow.Controllers.Appointments
         // Doctor: all own appointments with optional filtering
         //// =========================================================
 
-        //[Authorize(Roles = "Doctor")]//
-        //[HttpGet("doctor/me")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        //public async Task<IActionResult> GetDoctorAppointments(
-        //    [FromQuery] string? status,
-        //    [FromQuery] DateTime? date,
-        //    [FromQuery] int page = 1,
-        //    [FromQuery] int pageSize = 10,
-        //    CancellationToken cancellationToken = default)
-        //{
-        //    if (!TryGetCurrentUserId(out var userId))
-        //        return Unauthorized();
+        [Authorize(Roles = "Doctor")]//
+        [HttpGet("doctor/me")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetDoctorAppointments(
+            [FromQuery] string? status,
+            [FromQuery] DateTime? date,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            CancellationToken cancellationToken = default)
+        {
+            if (!TryGetCurrentUserId(out var userId))
+                return Unauthorized();
 
-        //    if (page <= 0)
-        //        return BadRequest("Page must be greater than 0.");
+            if (page <= 0)
+                return BadRequest("Page must be greater than 0.");
 
-        //    if (pageSize <= 0 || pageSize > 100)
-        //        return BadRequest("Page size must be between 1 and 100.");
+            if (pageSize <= 0 || pageSize > 100)
+                return BadRequest("Page size must be between 1 and 100.");
 
-        //    var query = new GetDoctorAppointmentsQuery(
-        //    //    userId,
-        //    //    status,
-        //    //    date,
-        //    //    page,
-        //    //    pageSize);
+            var query = new GetAppointmentByUserIdDoctorsQuery(
+                userId,
+                status,
+                date,
+                page,
+                pageSize);
 
-        //    //var result = await _mediator.Send(query, cancellationToken);
+            var result = await _mediator.Send(query, cancellationToken);
 
-        //    //return Ok(result);
-        //}
+            return Ok(result);
+        }
 
         // =========================================================
         // Doctor: own patients
@@ -184,7 +183,7 @@ namespace Clinic_Flow.Controllers.Appointments
                 return Unauthorized();
 
             var result = await _mediator.Send(
-               // new GetDoctorPatientsQuery(userId),
+                new GetDoctorPatientsQuery(userId),
                 cancellationToken);
 
             return Ok(result);

@@ -42,7 +42,7 @@ namespace Clinic_Application.Features.Appointments.Command.UpdateAppointment
                 DoctorId = appointment.DoctorId,
             //    PatientId = appointment.PatientId,
                 AppointmentDate = appointment.AppointmentDate,
-                Notes = appointment.Notes
+               // Notes = appointment.Notes
             };
 
             return updateAppointmentDTO;

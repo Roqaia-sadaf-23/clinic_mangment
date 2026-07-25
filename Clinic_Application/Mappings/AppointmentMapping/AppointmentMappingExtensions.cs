@@ -22,7 +22,7 @@ namespace Clinic_Application.Mappings.AppointmentMapping;
                 Status = appointment.StatusText,
                 LastStatusDate = appointment.LastStatusDate,
                 MedicalRecordId = appointment.MedicalRecordId,
-                Notes = appointment.Notes
+             //   Notes = appointment.Notes
             };
         }
 

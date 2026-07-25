@@ -3,7 +3,6 @@ using Clinic_Application.DTOs.Appintment;
 using Clinic_Application.Mappings.AppointmentMapping;
 using Clinic_Domain.Entities.Appointments;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;

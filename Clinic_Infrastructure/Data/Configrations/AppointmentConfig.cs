@@ -29,8 +29,7 @@ namespace Clinic_Infrastructure.Data.Configrations
             builder.Property(e => e.MedicalRecordId)
                 .HasColumnName("MedicalRecordID");
 
-            builder.Property(e => e.Notes)
-                .HasMaxLength(500);
+         
 
             builder.Property(e => e.AppointmentStatus)
                 .HasColumnName("Status")
