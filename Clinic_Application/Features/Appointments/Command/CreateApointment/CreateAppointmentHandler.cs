@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Clinic_Application.Features.Appointments.Command.CreateApointment { 
 
-public sealed class CreateAppointmentHandler(IAppDBContext context, ICurrentUserService currentUserr)
+public sealed class CreateAppointmentHandler(IAppDBContext context)
     : IRequestHandler<CreateAppointmentCommand, Result<AppointmentDTO>>
 {
 
@@ -21,8 +21,8 @@ public sealed class CreateAppointmentHandler(IAppDBContext context, ICurrentUser
     CreateAppointmentCommand request,
     CancellationToken cancellationToken)
     {
-            
-            var userId = currentUserr.UserId.Value;
+            //  ICurrentUserService currentUserr
+            var userId = request.userId;     //currentUserr.UserId.Value;
 
             var user = await context.Users
                 .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
@@ -73,7 +73,7 @@ public sealed class CreateAppointmentHandler(IAppDBContext context, ICurrentUser
           patientId,
             request.AppointmentDate,
           //  request.DurationInMinutes,
-            request.Notes,
+           
           userId
         );
 

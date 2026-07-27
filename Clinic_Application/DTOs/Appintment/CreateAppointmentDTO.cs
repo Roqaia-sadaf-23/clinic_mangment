@@ -16,6 +16,6 @@ namespace Clinic_Application.DTOs.Appintment
        // public int PatientId { get; set; }
         public DateTime AppointmentDate { get; set; }
         //public int DurationInMinutes { get; set; }
-        public string? Notes { get; set; }
+      //  public string? Notes { get; set; }
     }
 }

@@ -78,7 +78,7 @@ public partial class Appointment
         CreatedAt = DateTime.Now;
     }
 
-    public static Appointment Create(int doctorId, int patientId, DateTime appointmentDate,  string? notes,int? userId)
+    public static Appointment Create(int doctorId, int patientId, DateTime appointmentDate, int? userId)
     {
         if (doctorId <= 0)
             throw new ArgumentException("DoctorId must be greater than 0.");

@@ -45,11 +45,24 @@ namespace Clinic_Flow.Controllers.Appointments
         public async Task<IActionResult> CreateAppointment(
             CreateAppointmentDTO request,
             CancellationToken cancellationToken)
-        { 
+        {
+
+
+
+            if (!TryGetCurrentUserId(out var userId))
+            {
+                return Unauthorized(new
+                {
+                    isSuccess = false,
+                    message = "User is not authenticated."
+                });
+            }
+
             var command = new CreateAppointmentCommand(
+                userId,
                 request.DoctorId,
-                request.AppointmentDate,
-                request.Notes);
+                request.AppointmentDate
+               );
 
             var result = await _mediator.Send(command, cancellationToken);
 
