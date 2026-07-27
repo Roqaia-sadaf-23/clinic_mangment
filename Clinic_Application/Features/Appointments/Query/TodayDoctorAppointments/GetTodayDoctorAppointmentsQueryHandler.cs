@@ -8,9 +8,9 @@ using System;
 
 namespace Clinic_Application.Features.Appointments.Query.TodayDoctorAppointments
 {
-    public sealed class GetTodayDoctorAppointmentsQueryHandler(IAppDBContext context) : IRequestHandler<GetTodayDoctorAppointmentsQuery, List<AppointmentDTO>>
+    public sealed class GetTodayDoctorAppointmentsQueryHandler(IAppDBContext context) : IRequestHandler<GetTodayDoctorAppointmentsQuery, List<AppointmentInfoDTO>>
     {
-        public async Task<List<AppointmentDTO>> Handle(
+        public async Task<List<AppointmentInfoDTO>> Handle(
     GetTodayDoctorAppointmentsQuery request,
     CancellationToken cancellationToken)
         {
@@ -39,11 +39,11 @@ namespace Clinic_Application.Features.Appointments.Query.TodayDoctorAppointments
                 .ToListAsync(cancellationToken);
 
 
-            return todayAppointments.Select(a => new AppointmentDTO
+            return todayAppointments.Select(a => new AppointmentInfoDTO
             {
                 Id = a.Id,
-                DoctorId = a.DoctorId,
-                PatientId = a.PatientId,
+                DoctorName = a.Doctor.Person.FirstName+" "+a.Doctor.Person.LastName,
+                PatientName = a.Patient.Person.FirstName+" "+ a.Patient.Person.LastName,
                 AppointmentDate = a.AppointmentDate,
                 Status = a.AppointmentStatus.ToString(),
                 LastStatusDate = a.LastStatusDate,

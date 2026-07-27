@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Clinic_Application.Features.Appointments.Query.TodayDoctorAppointments
 {
-    public record  class GetTodayDoctorAppointmentsQuery(int UserId) : IRequest<List<AppointmentDTO>>  
+    public record  class GetTodayDoctorAppointmentsQuery(int UserId) : IRequest<List<AppointmentInfoDTO>>  
     {
     }
 }
