@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace Clinic_Application.Features.Appointments.Query.GetAppointmentById
 {
-    public sealed record class GetAppointmentByIdQuery(int Id,int userId) : IRequest<AppointmentDTO>;
+    public sealed record class GetAppointmentByIdQuery(int Id,int userId) : IRequest<AppointmentInfoDTO>;
    
 }

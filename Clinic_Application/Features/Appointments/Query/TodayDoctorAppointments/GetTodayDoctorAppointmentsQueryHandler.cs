@@ -3,6 +3,7 @@ using Clinic_Application.DTOs.Appintment;
 using Clinic_Domain.Entities.Appointments;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SendGrid.Helpers.Mail;
 using System;
 
 
@@ -32,24 +33,53 @@ namespace Clinic_Application.Features.Appointments.Query.TodayDoctorAppointments
                 throw new Exception("Doctor not found.");
 
 
+            //var todayAppointments = await context.Appointments
+            //    .Where(a =>
+            //        a.DoctorId == doctor.Id &&
+            //        a.AppointmentDate.Date == DateTime.Today)
+            //    .ToListAsync(cancellationToken);
+
+
+            //return todayAppointments.Select(a => new AppointmentInfoDTO
+            //{
+            //    Id = a.Id,
+            //    DoctorName = a.Doctor.Person.FirstName+" "+a.Doctor.Person.LastName,
+            //    PatientName = a.Patient.Person.FirstName+" "+ a.Patient.Person.LastName,
+            //    AppointmentDate = a.AppointmentDate,
+            //    Status = a.AppointmentStatus.ToString(),
+            //    LastStatusDate = a.LastStatusDate,
+            //    MedicalRecordId = a.MedicalRecordId,
+            //   // Notes = a.Notes
+            //}).ToList();
+
+
             var todayAppointments = await context.Appointments
-                .Where(a =>
-                    a.DoctorId == doctor.Id &&
-                    a.AppointmentDate.Date == DateTime.Today)
-                .ToListAsync(cancellationToken);
+    .AsNoTracking()
+    .Where(a =>
+        a.DoctorId == doctor.Id &&
+        a.AppointmentDate.Date == DateTime.Today)
+    .Select(a => new AppointmentInfoDTO
+    {
+        Id = a.Id,
 
+        DoctorName =
+            (a.Doctor.Person.FirstName ?? "") + " " +
+            (a.Doctor.Person.LastName ?? ""),
 
-            return todayAppointments.Select(a => new AppointmentInfoDTO
-            {
-                Id = a.Id,
-                DoctorName = a.Doctor.Person.FirstName+" "+a.Doctor.Person.LastName,
-                PatientName = a.Patient.Person.FirstName+" "+ a.Patient.Person.LastName,
-                AppointmentDate = a.AppointmentDate,
-                Status = a.AppointmentStatus.ToString(),
-                LastStatusDate = a.LastStatusDate,
-                MedicalRecordId = a.MedicalRecordId,
-               // Notes = a.Notes
-            }).ToList();
+        PatientName =
+            (a.Patient.Person.FirstName ?? "") + " " +
+            (a.Patient.Person.LastName ?? ""),
+
+        AppointmentDate = a.AppointmentDate,
+        Status = a.AppointmentStatus.ToString(),
+        LastStatusDate = a.LastStatusDate,
+        MedicalRecordId = a.MedicalRecordId
+    })
+    .OrderBy(a => a.AppointmentDate)
+    .ToListAsync(cancellationToken);
+
+            return todayAppointments;
+
         }
     }
 }

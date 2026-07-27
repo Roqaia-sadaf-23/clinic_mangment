@@ -26,6 +26,24 @@ namespace Clinic_Application.Mappings.AppointmentMapping;
             };
         }
 
+
+    public static AppointmentInfoDTO Todoinfo(this Appointment appointment) {
+
+
+        return new AppointmentInfoDTO
+        {
+            Id = appointment.Id,
+            DoctorName = appointment.Doctor.Person.FirstName + " " + appointment.Doctor.Person.LastName,
+            PatientName = appointment.Patient.Person.FirstName + " " + appointment.Patient.Person.LastName,
+            AppointmentDate = appointment.AppointmentDate,
+            Status = appointment.StatusText,
+            LastStatusDate = appointment.LastStatusDate,
+            MedicalRecordId = appointment.MedicalRecordId
+
+        };
+            
+            
+            }
     //public static Appointment ToEntity(this CreateAppointmentCommand dto)
     //{
     //    return  Appointment.Create(
@@ -38,13 +56,13 @@ namespace Clinic_Application.Mappings.AppointmentMapping;
     //    );
     //}
 
-        //public static void UpdateEntity(this UpdateAppointmentDTO dto, Appointment appointment)
-        //{
-        //    appointment.Update(
-        //        dto.DoctorId,
-        //        dto.PatientId,
-        //        dto.AppointmentDate,
-        //        dto.Notes
-        //    );
-        //}
-    }
+    //public static void UpdateEntity(this UpdateAppointmentDTO dto, Appointment appointment)
+    //{
+    //    appointment.Update(
+    //        dto.DoctorId,
+    //        dto.PatientId,
+    //        dto.AppointmentDate,
+    //        dto.Notes
+    //    );
+    //}
+}
