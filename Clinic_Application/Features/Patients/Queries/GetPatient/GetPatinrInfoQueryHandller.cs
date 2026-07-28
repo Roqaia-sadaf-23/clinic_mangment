@@ -26,16 +26,16 @@ namespace Clinic_Application.Features.Patients.Queries.GetPatient
                 )
                 .Select(x => new PatientInfoDto
                 {
-                    Id = x.patient.Id,
+                    PatientId = x.patient.Id,
 
-                    firstName = x.person.FirstName,
-                    lastName = x.person.LastName,
+                    PatientName = x.person.FirstName+" "+ x.person.LastName,
+                  
                     PhoneNumber = x.person.PhoneNumber,
                     Note = x.person.Note,
                     BloodType=x.patient.BloodType,
                     Age=x.person.Age,
                   PersonId=x.patient.PersonId,
-                    ImagePath = x.person.ImagePath,
+                    PatientImage = x.person.ImagePath,
                         UserId =context.Users.Where(u=> u.PersonId == x.patient.PersonId)
                         .Select(u => u.Id).FirstOrDefault()
 

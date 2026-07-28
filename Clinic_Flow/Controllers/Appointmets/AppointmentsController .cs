@@ -6,16 +6,17 @@ using Clinic_Application.Features.Appointments.Command.DeleteAppointment;
 using Clinic_Application.Features.Appointments.Command.UpdateAppointment;
 using Clinic_Application.Features.Appointments.Query.GetAppointmentById;
 using Clinic_Application.Features.Appointments.Query.GetAppointmentByUserIdDoctors;
+using Clinic_Application.Features.Appointments.Query.GetAppointmentByUserIdPatients;
 using Clinic_Application.Features.Appointments.Query.GetAvailableSlots;
 using Clinic_Application.Features.Appointments.Query.GetDoctorAppointmentSummary;
+using Clinic_Application.Features.Appointments.Query.GetDoctorPatients;
 using Clinic_Application.Features.Appointments.Query.GetPendingAppointment;
 using Clinic_Application.Features.Appointments.Query.TodayDoctorAppointments;
-using Clinic_Application.Features.Appointments.Query.GetAppointmentByUserIdPatients;
+using Clinic_Application.Features.Appointments.Query.GetDoctorPatientAppointments;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Clinic_Application.Features.Appointments.Query.GetDoctorPatients;
 namespace Clinic_Flow.Controllers.Appointments
 {
 
@@ -68,6 +69,35 @@ namespace Clinic_Flow.Controllers.Appointments
 
             return Ok(result);
         }
+        // =========================================================
+      //  Give me all appointments for this patient with the current doctor.
+        // =========================================================
+
+
+        [Authorize(Roles = "Doctor")]
+        [HttpGet("doctor/me/patients/{patientId:int}/appointments")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetDoctorPatientAppointments(
+    int patientId,
+    CancellationToken cancellationToken)
+        {
+            if (!TryGetCurrentUserId(out var userId))
+                return Unauthorized();
+
+            var result = await _mediator.Send(
+                new GetDoctorPatientAppointmentsQuery(
+                    userId,
+                    patientId),
+                cancellationToken);
+
+            return Ok(result);
+        }
+
+
+
 
         // =========================================================
         // Current user's appointments

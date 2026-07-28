@@ -19,15 +19,14 @@ namespace Clinic_Application.Features.Patients.Queries.GetPatientById
                 .Select(p => new PatientInfoDto
 
                 { 
-                    Id = p.Id,
+                    PatientId = p.Id,
                     PersonId = p.PersonId,
-                    firstName = p.Person.FirstName,
-                    lastName = p.Person.LastName,
+                    PatientName = p.Person.FirstName+" "+p.Person.LastName,
                     PhoneNumber = p.Person.PhoneNumber,
                     Note = p.Person.Note,
                     Age = p.Person.Age,
                     BloodType = p.BloodType,
-                    ImagePath = p.Person.ImagePath,
+                    PatientImage = p.Person.ImagePath,
                    
                     UserId = context.Users
                         .Where(u => u.PersonId == p.PersonId)
