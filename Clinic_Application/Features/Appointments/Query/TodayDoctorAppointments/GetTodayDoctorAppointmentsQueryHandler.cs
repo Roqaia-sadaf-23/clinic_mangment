@@ -73,7 +73,7 @@ namespace Clinic_Application.Features.Appointments.Query.TodayDoctorAppointments
         AppointmentDate = a.AppointmentDate,
         Status = a.AppointmentStatus.ToString(),
         LastStatusDate = a.LastStatusDate,
-        MedicalRecordId = a.MedicalRecordId
+     
     })
     .OrderBy(a => a.AppointmentDate)
     .ToListAsync(cancellationToken);

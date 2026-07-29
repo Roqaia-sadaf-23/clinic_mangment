@@ -17,7 +17,7 @@ namespace Clinic_Application.DTOs.Appintment
      //   public int DurationInMinutes { get; set; } = 40;
         public string Status { get; set; } 
         public DateTime LastStatusDate { get; set; }
-        public int? MedicalRecordId { get; set; }
+       // public int? MedicalRecordId { get; set; }
        // public string? Notes { get; set; }
     }
 }

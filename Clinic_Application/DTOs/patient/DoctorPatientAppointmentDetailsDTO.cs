@@ -23,7 +23,7 @@ namespace Clinic_Application.DTOs.patient
         public DateTime LastStatusDate { get; set; }
 
         public string? Note { get; set; }
-        public int? MedicalRecordId { get; set; }
+       // public int? MedicalRecordId { get; set; }
     }
 }
 

@@ -21,7 +21,7 @@ namespace Clinic_Application.Mappings.AppointmentMapping;
                 AppointmentDate = appointment.AppointmentDate,
                 Status = appointment.StatusText,
                 LastStatusDate = appointment.LastStatusDate,
-                MedicalRecordId = appointment.MedicalRecordId,
+          
              //   Notes = appointment.Notes
             };
         }
@@ -38,7 +38,7 @@ namespace Clinic_Application.Mappings.AppointmentMapping;
             AppointmentDate = appointment.AppointmentDate,
             Status = appointment.StatusText,
             LastStatusDate = appointment.LastStatusDate,
-            MedicalRecordId = appointment.MedicalRecordId
+          
 
         };
             

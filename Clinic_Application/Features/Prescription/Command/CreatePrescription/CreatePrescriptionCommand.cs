@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Clinic_Application.Features.Prescription.Command.CreatePrescription
 {
-    public sealed record CreatePrescriptionCommand(string MedicationName, string?
+    public sealed record CreatePrescriptionCommand(int medicalRecordId, string MedicationName, string?
         Frequency, string? Dosage, string? SpecialInstructions) : IRequest<int>;
   
 }

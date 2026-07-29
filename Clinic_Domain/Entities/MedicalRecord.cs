@@ -11,14 +11,15 @@ public class MedicalRecord
     public string? VisitDescreption { get; private set; }
 
     public int AppointmentId { get; private set; }
-    public Appointment Appointment { get; private set; } = null!;
+    public virtual Appointment Appointment { get; private set; } = null!;
 
     //public int? PaymentId { get; private set; }
     //public Payment? Payment { get; private set; } = null!;
 
     //public int? PrescriptionId { get; private set; }
     //public Prescription? Prescription { get; private set; }
-
+    public virtual ICollection<Prescription> Prescriptions { get; set; }
+    = new List<Prescription>();
     private MedicalRecord() { }
 
     private MedicalRecord(

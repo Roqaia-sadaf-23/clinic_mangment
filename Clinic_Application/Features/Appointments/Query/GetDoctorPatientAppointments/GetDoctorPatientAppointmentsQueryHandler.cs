@@ -69,7 +69,7 @@ namespace Clinic_Application.Features.Appointments.Query.GetDoctorPatientAppoint
                     Status = a.StatusText,
                     PhoneNumber=a.Patient.Person.PhoneNumber,
                     LastStatusDate = a.LastStatusDate,
-                    MedicalRecordId = a.MedicalRecordId,
+                
                     Note = a.Patient.Person.Note
                 })
                 .ToListAsync(cancellationToken);

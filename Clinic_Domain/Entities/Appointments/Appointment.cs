@@ -46,9 +46,7 @@ public partial class Appointment
     
     public DateTime LastStatusDate { get; private set; }
 
-    public int? MedicalRecordId { get; private set; }
-    //public MedicalRecord? MedicalRecord { get; set; }
-   // public string? Notes { get; private set; }
+    public virtual MedicalRecord? MedicalRecord { get; set; }
 
     public DateTimeOffset? CreatedAt { get; private set; }
 
@@ -60,7 +58,6 @@ public partial class Appointment
 
     public int DurationInMinutes { get; private set; } = 40;
 
-    public virtual ICollection<MedicalRecord> MedicalRecords { get;private set; } = new List<MedicalRecord>();
 
 
     private Appointment() { }
@@ -126,11 +123,11 @@ public partial class Appointment
     //    Notes = notes;
     //}
 
-    public void AttachMedicalRecord(int medicalRecordId)
-    {
-        if (medicalRecordId <= 0)
-            throw new ArgumentException("MedicalRecordId must be greater than 0.");
+    //public void AttachMedicalRecord(int medicalRecordId)
+    //{
+    //    if (medicalRecordId <= 0)
+    //        throw new ArgumentException("MedicalRecordId must be greater than 0.");
 
-        MedicalRecordId = medicalRecordId;
-    }
+    //    MedicalRecordId = medicalRecordId;
+    //}
 }

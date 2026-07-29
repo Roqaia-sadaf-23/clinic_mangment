@@ -24,7 +24,7 @@ namespace Clinic_Application.Features.MedicalRecord.Command.CreateMedicalRecord
                 var appointment = appointmentTask.Result;
                 if (appointment != null)
                 {
-                    appointment.AttachMedicalRecord(medicalRecord.Id);
+                  //  appointment.AttachMedicalRecord(medicalRecord.Id);
                     context.Appointments.Update(appointment);
                     await context.SaveChangesAsync(cancellationToken);
                 }

@@ -21,8 +21,8 @@ namespace Clinic_Infrastructure.Data.Configrations
             builder.Property(e => e.VisitDescreption)
                 .HasMaxLength(500);
 
-            builder.HasOne(d => d.Appointment).WithMany(p => p.MedicalRecords)
-                .HasForeignKey(d => d.AppointmentId)
+            builder.HasOne(d => d.Appointment).WithOne(p => p.MedicalRecord)
+                .HasForeignKey<MedicalRecord>(d => d.AppointmentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__MedicalRe__Appoi__72910220");
 

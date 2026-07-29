@@ -16,11 +16,21 @@ namespace Clinic_Infrastructure.Data.Configrations
         {
 
             builder.HasKey(e => e.Id).HasName("PK__Prescrip__3214EC07734BBE85");
-
+            builder.Property(e => e.MedicalRecordId).HasColumnType("int");
             builder.Property(e => e.Dosage).HasMaxLength(100);
             builder.Property(e => e.Frequency).HasMaxLength(50);
             builder.Property(e => e.MedicationName).HasMaxLength(200);
             builder.Property(e => e.SpecialInstructions).HasMaxLength(500);
+            builder.HasOne(p => p.MedicalRecord)
+                  .WithMany(m => m.Prescriptions)
+                  .HasForeignKey(p => p.MedicalRecordId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            //builder.HasOne(d => d.MedicalRecords)
+            //    .WithMany(p => p.Prescription)
+            //    .HasForeignKey(d => d.MedicalRecordId)
+            //    .OnDelete(DeleteBehavior.Restrict)
+            //    .HasConstraintName("FK__Prescript__Medic__3B75D760");
 
         }
     }

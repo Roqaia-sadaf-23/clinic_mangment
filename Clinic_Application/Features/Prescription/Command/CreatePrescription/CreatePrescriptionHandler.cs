@@ -12,7 +12,10 @@ namespace Clinic_Application.Features.Prescription.Command.CreatePrescription
     {
         public async Task<int> Handle(CreatePrescriptionCommand request, CancellationToken cancellationToken)
         {
-        var prescription= entity.Create(request.MedicationName, request.Frequency, request.Dosage, request.SpecialInstructions);
+
+
+
+        var prescription= entity.Create(request.medicalRecordId,request.MedicationName, request.Frequency, request.Dosage, request.SpecialInstructions);
                 context.Prescriptions.Add(prescription);
                 await context.SaveChangesAsync(cancellationToken);
             return prescription.Id; 

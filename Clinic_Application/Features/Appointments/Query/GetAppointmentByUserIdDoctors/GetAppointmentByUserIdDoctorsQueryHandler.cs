@@ -89,7 +89,7 @@ namespace Clinic_Application.Features.Appointments.Query.GetAppointmentByUserIdD
                     AppointmentDate = a.AppointmentDate,
                     Status = a.AppointmentStatus.ToString(),
                     LastStatusDate = a.LastStatusDate,
-                    MedicalRecordId = a.MedicalRecordId,
+        
                     Notes = a.Patient.Person.Note
                 })
                 .ToListAsync(cancellationToken);
