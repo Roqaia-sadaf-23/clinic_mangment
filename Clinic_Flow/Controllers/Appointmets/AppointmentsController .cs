@@ -9,10 +9,11 @@ using Clinic_Application.Features.Appointments.Query.GetAppointmentByUserIdDocto
 using Clinic_Application.Features.Appointments.Query.GetAppointmentByUserIdPatients;
 using Clinic_Application.Features.Appointments.Query.GetAvailableSlots;
 using Clinic_Application.Features.Appointments.Query.GetDoctorAppointmentSummary;
+using Clinic_Application.Features.Appointments.Query.GetDoctorPatientAppointments;
 using Clinic_Application.Features.Appointments.Query.GetDoctorPatients;
 using Clinic_Application.Features.Appointments.Query.GetPendingAppointment;
 using Clinic_Application.Features.Appointments.Query.TodayDoctorAppointments;
-using Clinic_Application.Features.Appointments.Query.GetDoctorPatientAppointments;
+using Clinic_Flow.UserService;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -459,6 +460,7 @@ namespace Clinic_Flow.Controllers.Appointments
         // Helper
         // =========================================================
 
+
         private bool TryGetCurrentUserId(out int userId)
         {
             var userIdValue =
@@ -466,8 +468,6 @@ namespace Clinic_Flow.Controllers.Appointments
 
             return int.TryParse(userIdValue, out userId);
         }
-
-
 
 
 

@@ -1,5 +1,6 @@
 ﻿using Clinic_Application.Common.Interfaces;
 using Clinic_Application.Features.MedicalRecord.Command.CreateMedicalRecord;
+using Clinic_Domain.Entities;
 using MediatR;
 using Entity = Clinic_Domain.Entities.MedicalRecord;
 
@@ -10,7 +11,7 @@ namespace Clinic_Application.Features.MedicalRecord.Command.CreateMedicalRecord
         public async Task<int> Handle(CreateMedicalRecordCommand request, CancellationToken cancellationToken)
         {
         
-            var medicalRecord =   Entity.Create(request.Diagnosis, request.Notes, request.VisitDescription, request.AppointmentId,request.PaymentID,request.PrescriptionId);
+            var medicalRecord =   Entity.Create( request.Diagnosis, request.Notes, request.VisitDescription, request.AppointmentId);
           
 
 

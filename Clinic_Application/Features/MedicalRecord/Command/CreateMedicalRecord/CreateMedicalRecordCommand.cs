@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace Clinic_Application.Features.MedicalRecord.Command.CreateMedicalRecord
 {
-    public sealed record CreateMedicalRecordCommand(string Diagnosis,
-        string? Notes,
-        string? VisitDescription,
-        int AppointmentId, int? PaymentID, int? PrescriptionId) : IRequest<int>;
-  
+    public sealed record CreateMedicalRecordCommand(int UserId,
+    int AppointmentId,
+    string Diagnosis,
+    string? VisitDescription,
+    string? Notes
+) : IRequest<int>;
+
 }
