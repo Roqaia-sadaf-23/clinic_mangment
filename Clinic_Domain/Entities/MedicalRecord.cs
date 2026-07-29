@@ -51,7 +51,7 @@ public class MedicalRecord
     public void UpdateDiagnosis(string diagnosis,
         string? notes,
         string? visitDescription,
-        int appointmentId, int? paymentId, int? prescriptionId)
+        int appointmentId)
     {
         if (string.IsNullOrWhiteSpace(diagnosis))
             throw new ArgumentException("Diagnosis is required.");

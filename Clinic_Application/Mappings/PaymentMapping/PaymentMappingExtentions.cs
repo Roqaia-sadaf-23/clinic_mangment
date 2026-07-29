@@ -20,7 +20,7 @@ namespace Clinic_Application.Mappings.PaymentMapping
 
         public static Payment ToEntity(this CreatePaymentDTO dto)
         {
-            return Payment.Create(dto.AppointmentId,dto.PatientId, dto.paymentMethod, 
+            return Payment.Create(dto.AppointmentId, dto.paymentMethod, 
                 dto.Amount, dto.Note);
 
 

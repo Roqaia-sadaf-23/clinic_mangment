@@ -18,7 +18,7 @@ namespace Clinic_Application.Features.MedicalRecord.Command.UpdateMedicalRecord
             if(medicalRecord == null ) 
                 return null;
 
-          medicalRecord.UpdateDiagnosis(request.Diagnosis, request.Notes, request.VisitDescreption, request.AppointmentId, request.PaymentID, request.PrescriptionID);
+          medicalRecord.UpdateDiagnosis(request.Diagnosis, request.Notes, request.VisitDescreption, request.AppointmentId);
 
             context.MedicalRecords.Update(medicalRecord);
             await context.SaveChangesAsync(cancellationToken);

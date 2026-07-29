@@ -32,10 +32,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
                     .HasForeignKey(p => p.AppointmentId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                builder.HasOne(p => p.Patient)
-                    .WithMany()
-                    .HasForeignKey(p => p.PatientId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                //builder.HasOne(p => p.Patient)
+                //    .WithMany()
+                //    .HasForeignKey(p => p.PatientId)
+                //    .OnDelete(DeleteBehavior.Restrict);
             }
         }
     }

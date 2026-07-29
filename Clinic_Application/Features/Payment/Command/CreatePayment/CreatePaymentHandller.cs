@@ -8,7 +8,7 @@ namespace Clinic_Application.Features.Payment.Command.CreatePayment
     {
         public async Task<int> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
         {
-         var payment = entity.Create(request.appointmentId, request.patientId,request.paymentMethod, request.amount, request.note);
+         var payment = entity.Create(request.appointmentId, request.paymentMethod, request.amount, request.note);
             context.Payments.Add(payment);
             await context.SaveChangesAsync(cancellationToken);
             return payment.Id;

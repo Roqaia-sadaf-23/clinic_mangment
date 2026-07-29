@@ -11,8 +11,8 @@ public class Payment
     public int AppointmentId { get; private set; }
     public Appointment Appointment { get; private set; }
    
-    public int PatientId { get; private set; }
-    public Patient Patient { get; private set; }
+    //public int PatientId { get; private set; }
+    //public Patient Patient { get; private set; }
     public decimal Amount { get; private set; }
 
     public PaymentStatus Status { get; private set; }
@@ -27,13 +27,12 @@ public class Payment
 
     private Payment(
         int appointmentId,
-        int patientId,
         string? paymentMethod,
         decimal amount,
         string? note)
     {
         AppointmentId = appointmentId;
-        PatientId = patientId;
+       
         Amount = amount;
         Note = note;
         PaymentMethod = paymentMethod;
@@ -43,7 +42,7 @@ public class Payment
 
     public static Payment Create(
         int appointmentId,
-        int patientId,
+
         string? paymentMethod,
         decimal amount,
         string? note)
@@ -51,15 +50,15 @@ public class Payment
         if (appointmentId <= 0)
             throw new ArgumentException("Invalid appointment.");
 
-        if (patientId <= 0)
-            throw new ArgumentException("Invalid patient.");
+        //if (patientId <= 0)
+        //    throw new ArgumentException("Invalid patient.");
 
         if (amount <= 0)
             throw new ArgumentException("Amount must be greater than zero.");
 
         return new Payment(
             appointmentId,
-            patientId,
+           
             paymentMethod,
             amount,
             note);

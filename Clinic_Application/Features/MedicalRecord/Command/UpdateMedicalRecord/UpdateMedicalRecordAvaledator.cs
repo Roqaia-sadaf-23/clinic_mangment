@@ -14,7 +14,7 @@ namespace Clinic_Application.Features.MedicalRecord.Command.UpdateMedicalRecord
             RuleFor(x => x.Id).NotEmpty().WithMessage("Id is required");
             RuleFor(x => x.AppointmentId).NotEmpty().WithMessage("AppointmentId is required");
             RuleFor(x => x.Diagnosis).NotEmpty().WithMessage("Diagnosis is required");
-            RuleFor(x => x.PrescriptionID).NotEmpty().WithMessage("PrescriptionID is required");
+         //   RuleFor(x => x.PrescriptionID).NotEmpty().WithMessage("PrescriptionID is required");
         }
     }
 }

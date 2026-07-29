@@ -14,10 +14,10 @@ namespace Clinic_Infrastructure.Data.Configrations
             builder.HasKey(e => e.Id).HasName("PK__MedicalR__3214EC071C1ADD6D");
 
             builder.Property(e => e.Diagnosis).HasMaxLength(500);
-            builder.Property(e => e.PaymentId).HasColumnName("PaymentID");
+          //  builder.Property(e => e.PaymentId).HasColumnName("PaymentID");
 
             builder.Property(e => e.Notes).HasColumnName("Notes");
-            builder.Property(e => e.PrescriptionId).HasColumnName("PrescriptionID");
+          //  builder.Property(e => e.PrescriptionId).HasColumnName("PrescriptionID");
             builder.Property(e => e.VisitDescreption)
                 .HasMaxLength(500);
 
@@ -30,9 +30,9 @@ namespace Clinic_Infrastructure.Data.Configrations
             //    .HasForeignKey(d => d.PaymentId)
             //    .HasConstraintName("FK_MedicalRecords_Payments");
 
-            builder.HasOne(d => d.Prescription).WithMany(p => p.MedicalRecords)
-                .HasForeignKey(d => d.PrescriptionId)
-                .HasConstraintName("FK_MedicalRecords_Prescriptions");
+            //builder.HasOne(d => d.Prescription).WithMany(p => p.MedicalRecords)
+            //    .HasForeignKey(d => d.PrescriptionId)
+            //    .HasConstraintName("FK_MedicalRecords_Prescriptions");
         }
     }
 }
