@@ -10,6 +10,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Clinic_Flow.Controllers.MedicalRecord
 {   
@@ -77,26 +78,20 @@ namespace Clinic_Flow.Controllers.MedicalRecord
                     dto.VisitDescription,
                     dto.Notes),
                 cancellationToken);
-
-            return CreatedAtAction(
-                nameof(GetById),
-                new { id = medicalRecordId },
-                new
-                {
-                    id = medicalRecordId,
-                    message = "Medical record created successfully."
-                });
+            if(medicalRecordId<=0)
+                return NotFound();
+            return Ok(medicalRecordId);
         }
 
-        [Authorize(Roles = "Doctor")]
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetById(
-            int id,
-            CancellationToken cancellationToken)
-        {
-            // يمكنك تنفيذ Query لاحقًا.
-            return Ok();
-        }
+        //[Authorize(Roles = "Doctor")]
+        //[HttpGet("{id:int}")]
+        //public async Task<IActionResult> GetById(
+        //    int id,
+        //    CancellationToken cancellationToken)
+        //{
+        //    // يمكنك تنفيذ Query لاحقًا.
+        //    return Ok();
+        //}
 
         [Authorize(Roles = "Doctor")]
         [HttpGet("doctor/me/patients/{patientId:int}")]
