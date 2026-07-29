@@ -17,7 +17,7 @@ namespace Clinic_Application.DTOs.MedicalRecord
         public string? VisitDescription { get; set; }
         public string? Notes { get; set; }
 
-        public int? PrescriptionId { get; set; }
-        public int? PaymentId { get; set; }
+        //public int? PrescriptionId { get; set; }
+        //public int? PaymentId { get; set; }
     }
 }

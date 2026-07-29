@@ -59,8 +59,7 @@ namespace Clinic_Application.Features.MedicalRecord.Query.GetDoctorPatientMedica
                     VisitDescription = m.VisitDescreption,
                    
                     Notes = m.Notes,
-                    PrescriptionId = m.PrescriptionId,
-                    PaymentId = m.PaymentId
+             
                 })
                 .ToListAsync(cancellationToken);
 

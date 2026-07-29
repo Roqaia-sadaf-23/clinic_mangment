@@ -115,15 +115,17 @@ namespace Clinic_Flow.Controllers.MedicalRecord
             return Ok(result);
         }
 
-
+        
+        [Authorize(Roles = "Doctor")]
         [HttpPut("{id}", Name = "UpdateMedicl")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, UpdateDiagnosisMedicalRecordDTO request)
         {
-            var command = new UpdateDiagnosisMedicalRecordCommand(id, request.Diagnosis, request.Notes, request.VisitDescription,
-                request.AppointmentId,request.PaymentId,request.PrescriptionId);
+            var command = new UpdateDiagnosisMedicalRecordCommand(id, request.Diagnosis, 
+                request.Notes, request.VisitDescription,
+                request.AppointmentId);
 
             var result = await _mediator.Send(command);
             if (result is null)

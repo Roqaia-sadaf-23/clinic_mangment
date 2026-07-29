@@ -13,11 +13,11 @@ public class MedicalRecord
     public int AppointmentId { get; private set; }
     public Appointment Appointment { get; private set; } = null!;
 
-    public int? PaymentId { get; private set; }
-    public Payment? Payment { get; private set; } = null!;
+    //public int? PaymentId { get; private set; }
+    //public Payment? Payment { get; private set; } = null!;
 
-    public int? PrescriptionId { get; private set; }
-    public Prescription? Prescription { get; private set; }
+    //public int? PrescriptionId { get; private set; }
+    //public Prescription? Prescription { get; private set; }
 
     private MedicalRecord() { }
 
@@ -61,8 +61,7 @@ public class MedicalRecord
         Notes = notes;
         VisitDescreption = visitDescription;
         AppointmentId = appointmentId;
-        PaymentId = paymentId;
-        PrescriptionId = prescriptionId;
+     
     }
 
     public void UpdateNotes(string? notes)
@@ -75,19 +74,19 @@ public class MedicalRecord
         VisitDescreption = visitDescription;
     }
 
-    public void AttachPayment(int paymentId)
-    {
-        if (paymentId <= 0)
-            throw new ArgumentException("PaymentId must be greater than 0.");
+    //public void AttachPayment(int paymentId)
+    //{
+    //    if (paymentId <= 0)
+    //        throw new ArgumentException("PaymentId must be greater than 0.");
 
-        PaymentId = paymentId;
-    }
+    //    PaymentId = paymentId;
+    //}
 
-    public void AttachPrescription(int prescriptionId)
-    {
-        if (prescriptionId <= 0)
-            throw new ArgumentException("PrescriptionId must be greater than 0.");
+    //public void AttachPrescription(int prescriptionId)
+    //{
+    //    if (prescriptionId <= 0)
+    //        throw new ArgumentException("PrescriptionId must be greater than 0.");
 
-        PrescriptionId = prescriptionId;
-    }
+    //    PrescriptionId = prescriptionId;
+    //}
 }

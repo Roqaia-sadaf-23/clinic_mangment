@@ -27,8 +27,7 @@ namespace Clinic_Application.Features.MedicalRecord.Query.GetByIdMedicalRecord
                 Notes = medicalRecord.Notes,
                 VisitDescription = medicalRecord.VisitDescreption,
                 AppointmentId = medicalRecord.AppointmentId,
-                PaymentId = medicalRecord.PaymentId,
-                PrescriptionId = medicalRecord.PrescriptionId
+        
             };
         }
     }

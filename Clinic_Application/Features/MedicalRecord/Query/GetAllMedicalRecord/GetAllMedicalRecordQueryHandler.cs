@@ -20,8 +20,7 @@ namespace Clinic_Application.Features.MedicalRecord.Query.GetAllMedicalRecord
          Notes = m.Notes,
          VisitDescription = m.VisitDescreption,
          AppointmentId = m.AppointmentId,
-         PaymentId = m.PaymentId,
-         PrescriptionId = m.PrescriptionId
+ 
      }).ToList();
             return Task.FromResult(result);
         }
