@@ -1,13 +1,16 @@
 ﻿
 using Clinic_Application.DTOs.Prescription;
- 
-using Clinic_Application.Features.Prescription.Command.CreatePrescription;
+using Clinic_Application.Features.MedicalRecord.Query;
+
+    using Clinic_Application.Features.Prescription.Command.CreatePrescription;
 using Clinic_Application.Features.Prescription.Command.DeletePrescription;
-using Clinic_Application.Features.Prescription.Command.UpdatePrescription;
+using Clinic_Application.Features.Prescription.Command.UpdatePrescription; 
 using Clinic_Application.Features.Prescription.Query.GetAllPrescription;
 using Clinic_Application.Features.Prescription.Query.GetPrescriptionById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Clinic_Flow.Controllers.Prescription
 { 
@@ -113,7 +116,37 @@ namespace Clinic_Flow.Controllers.Prescription
 
 
 
+        //get all prescriptions for a specific patient of the current doctor
+        [Authorize(Roles = "Doctor")]
+        [HttpGet("doctor/me/patients/{patientId:int}")]
+        public async Task<IActionResult> GetDoctorPatientPrescriptions(
+    int patientId,
+    CancellationToken cancellationToken)
+        {
+            if (!TryGetCurrentUserId(out var userId))
+                return Unauthorized();
+
+            var result = await _mediator.Send(
+                new GetDoctorPatientPrescriptionsQuery(userId, patientId),
+                cancellationToken);
+
+            return Ok(result);
         }
+
+        // =========================================================
+        // Helper
+        // =========================================================
+
+
+        private bool TryGetCurrentUserId(out int userId)
+        {
+            var userIdValue =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return int.TryParse(userIdValue, out userId);
+        }
+
     }
+}
 
 

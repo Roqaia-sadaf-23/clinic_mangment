@@ -9,7 +9,7 @@ public class Payment
     public int Id { get; private set; }
 
     public int AppointmentId { get; private set; }
-    public Appointment Appointment { get; private set; }
+    public virtual Appointment Appointment { get; private set; }
    
     //public int PatientId { get; private set; }
     //public Patient Patient { get; private set; }

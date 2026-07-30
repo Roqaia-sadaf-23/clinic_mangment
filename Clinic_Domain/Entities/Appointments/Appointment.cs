@@ -47,7 +47,7 @@ public partial class Appointment
     public DateTime LastStatusDate { get; private set; }
 
     public virtual MedicalRecord? MedicalRecord { get; set; }
-
+    public virtual Payment? Payment { get; set; }
     public DateTimeOffset? CreatedAt { get; private set; }
 
     public int? CreatedByUserId { get; private set; }
