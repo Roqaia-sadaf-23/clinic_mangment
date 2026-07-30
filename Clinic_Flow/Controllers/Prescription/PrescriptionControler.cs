@@ -1,11 +1,11 @@
 ﻿
 using Clinic_Application.DTOs.Prescription;
-using Clinic_Application.Features.MedicalRecord.Query;
-
-    using Clinic_Application.Features.Prescription.Command.CreatePrescription;
+ 
+using Clinic_Application.Features.Prescription.Command.CreatePrescription;
 using Clinic_Application.Features.Prescription.Command.DeletePrescription;
-using Clinic_Application.Features.Prescription.Command.UpdatePrescription; 
+using Clinic_Application.Features.Prescription.Command.UpdatePrescription;
 using Clinic_Application.Features.Prescription.Query.GetAllPrescription;
+using Clinic_Application.Features.Prescription.Query.GetDoctorPatientPrescriptions;
 using Clinic_Application.Features.Prescription.Query.GetPrescriptionById;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

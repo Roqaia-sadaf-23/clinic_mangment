@@ -5,9 +5,13 @@ using Clinic_Application.Features.Payment.Command.CreatePayment;
 using Clinic_Application.Features.Payment.Command.DeletePayment;
 using Clinic_Application.Features.Payment.Command.UpdatePayment;
 using Clinic_Application.Features.Payment.Query.GetAllPayment;
+using Clinic_Application.Features.Payment.Query.GetDoctorPatientPayments;
 using Clinic_Application.Features.Payment.Query.GetPaymentByID;
+using Clinic_Application.Features.Prescription.Query.GetDoctorPatientPrescriptions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Clinic_Flow.Controllers.Payment
 {   
@@ -106,5 +110,40 @@ namespace Clinic_Flow.Controllers.Payment
             }
             return Ok(result);
         }
+
+
+
+
+        //get all Paymentsfor a specific patient of the current doctor
+        [Authorize(Roles = "Doctor")]
+        [HttpGet("doctor/me/patients/{patientId:int}")]
+        public async Task<IActionResult> GetDoctorPatientPayments(
+    int patientId,
+    CancellationToken cancellationToken)
+        {
+            if (!TryGetCurrentUserId(out var userId))
+                return Unauthorized();
+
+            var result = await _mediator.Send(
+                new GetDoctorPatientPaymentsQuery(userId, patientId),
+                cancellationToken);
+
+            return Ok(result);
+        }
+
+        // =========================================================
+        // Helper
+        // =========================================================
+
+
+        private bool TryGetCurrentUserId(out int userId)
+        {
+            var userIdValue =
+                User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return int.TryParse(userIdValue, out userId);
+        }
+
+
     }
 }
