@@ -1,34 +1,71 @@
 ﻿using Clinic_Application.Common.Interfaces;
-using Clinic_Application.Features.MedicalRecord.Command.CreateMedicalRecord;
-using Clinic_Domain.Entities;
+using Clinic_Domain.Entities.Appointments;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Entity = Clinic_Domain.Entities.MedicalRecord;
 
 namespace Clinic_Application.Features.MedicalRecord.Command.CreateMedicalRecord
 {
-    public sealed class CreateMedicalRecordHandler(IAppDBContext context) : IRequestHandler<CreateMedicalRecordCommand, int>
+    public sealed class CreateMedicalRecordHandler(IAppDBContext context)
+        : IRequestHandler<CreateMedicalRecordCommand, int>
     {
-        public async Task<int> Handle(CreateMedicalRecordCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(
+            CreateMedicalRecordCommand request,
+            CancellationToken cancellationToken)
         {
-        
-            var medicalRecord =   Entity.Create( request.Diagnosis, request.Notes, request.VisitDescription, request.AppointmentId);
-          
+            var appointment = await context.Appointments
+                .FirstOrDefaultAsync(
+                    appointment => appointment.Id == request.AppointmentId,
+                    cancellationToken);
 
+            if (appointment is null)
+            {
+                throw new KeyNotFoundException(
+                    "Appointment was not found.");
+            }
+
+            var medicalRecordExists = await context.MedicalRecords
+                .AnyAsync(
+                    record =>
+                        record.AppointmentId == request.AppointmentId,
+                    cancellationToken);
+
+            if (medicalRecordExists)
+            {
+                throw new InvalidOperationException(
+                    "A medical record already exists for this appointment.");
+            }
+
+            if (appointment.AppointmentStatus != AppointmentStatus.Completed)
+            {
+                throw new InvalidOperationException(
+                    "A medical record can only be created for a completed appointment.");
+            }
+
+
+
+            //if (!string.Equals(
+            //        appointment.AppointmentStatus.ToString(),
+            //        "Completed",
+            //        StringComparison.OrdinalIgnoreCase))
+            //{
+            //    throw new InvalidOperationException(
+            //        "A medical record can only be created for a completed appointment.");
+            //}
+
+            var medicalRecord = Entity.Create(
+                request.Diagnosis.Trim(),
+                string.IsNullOrWhiteSpace(request.Notes)
+                    ? null
+                    : request.Notes.Trim(),
+                string.IsNullOrWhiteSpace(request.VisitDescription)
+                    ? null
+                    : request.VisitDescription.Trim(),
+                request.AppointmentId);
 
             context.MedicalRecords.Add(medicalRecord);
-          await context.SaveChangesAsync(cancellationToken);
 
-          await context.Appointments.FindAsync(new object[] { request.AppointmentId },
-              cancellationToken).AsTask().ContinueWith(async appointmentTask =>
-            {
-                var appointment = appointmentTask.Result;
-                if (appointment != null)
-                {
-                  //  appointment.AttachMedicalRecord(medicalRecord.Id);
-                    context.Appointments.Update(appointment);
-                    await context.SaveChangesAsync(cancellationToken);
-                }
-            }, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
 
             return medicalRecord.Id;
         }

@@ -2,6 +2,7 @@
 using Clinic_Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Reflection.Emit;
 
 namespace Clinic_Infrastructure.Data.Configrations
 {
@@ -11,28 +12,30 @@ namespace Clinic_Infrastructure.Data.Configrations
         {
             builder.ToTable("MedicalRecords");
 
-            builder.HasKey(e => e.Id).HasName("PK__MedicalR__3214EC071C1ADD6D");
+            builder.HasKey(e => e.Id)
+                .HasName("PK__MedicalR__3214EC071C1ADD6D");
 
-            builder.Property(e => e.Diagnosis).HasMaxLength(500);
-          //  builder.Property(e => e.PaymentId).HasColumnName("PaymentID");
+            builder.Property(e => e.Diagnosis)
+                .HasMaxLength(500);
 
-            builder.Property(e => e.Notes).HasColumnName("Notes");
-          //  builder.Property(e => e.PrescriptionId).HasColumnName("PrescriptionID");
+            builder.Property(e => e.Notes)
+                .HasColumnName("Notes");
+
             builder.Property(e => e.VisitDescreption)
                 .HasMaxLength(500);
 
-            builder.HasOne(d => d.Appointment).WithOne(p => p.MedicalRecord)
-                .HasForeignKey<MedicalRecord>(d => d.AppointmentId)
+            builder.HasIndex(e => e.AppointmentId)
+                .IsUnique()
+                .HasDatabaseName(
+                    "UX_MedicalRecords_AppointmentId");
+
+            builder.HasOne(d => d.Appointment)
+                .WithOne(p => p.MedicalRecord)
+                .HasForeignKey<MedicalRecord>(
+                    d => d.AppointmentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__MedicalRe__Appoi__72910220");
-
-            //builder.HasOne(d => d.Payment).WithMany(p => p.MedicalRecords)
-            //    .HasForeignKey(d => d.PaymentId)
-            //    .HasConstraintName("FK_MedicalRecords_Payments");
-
-            //builder.HasOne(d => d.Prescription).WithMany(p => p.MedicalRecords)
-            //    .HasForeignKey(d => d.PrescriptionId)
-            //    .HasConstraintName("FK_MedicalRecords_Prescriptions");
+                .HasConstraintName(
+                    "FK__MedicalRe__Appoi__72910220"); ;
         }
     }
 }
