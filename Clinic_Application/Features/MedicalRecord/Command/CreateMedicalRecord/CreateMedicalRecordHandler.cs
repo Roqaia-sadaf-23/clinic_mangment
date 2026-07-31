@@ -3,7 +3,7 @@ using Clinic_Domain.Entities.Appointments;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Entity = Clinic_Domain.Entities.MedicalRecord;
-
+using Clinic_Application.Common.Exceptions;
 namespace Clinic_Application.Features.MedicalRecord.Command.CreateMedicalRecord
 {
     public sealed class CreateMedicalRecordHandler(IAppDBContext context)
@@ -20,7 +20,8 @@ namespace Clinic_Application.Features.MedicalRecord.Command.CreateMedicalRecord
 
             if (appointment is null)
             {
-                throw new KeyNotFoundException(
+             throw new ConflictException(
+
                     "Appointment was not found.");
             }
 
@@ -32,13 +33,13 @@ namespace Clinic_Application.Features.MedicalRecord.Command.CreateMedicalRecord
 
             if (medicalRecordExists)
             {
-                throw new InvalidOperationException(
-                    "A medical record already exists for this appointment.");
+                throw new ConflictException(
+     "A medical record already exists for this appointment.");
             }
 
             if (appointment.AppointmentStatus != AppointmentStatus.Completed)
             {
-                throw new InvalidOperationException(
+                throw new ConflictException(
                     "A medical record can only be created for a completed appointment.");
             }
 

@@ -1,5 +1,6 @@
 ﻿  using Clinic_Application.DTOs.MedicalRecord;
 using Clinic_Application.Features.MedicalRecord.Query.GetDoctorPatientMedicalRecord;
+using Clinic_Application.Common.Exceptions;
 
 using Clinic_Application.Features.MedicalRecord.Command.CreateMedicalRecord;
 using Clinic_Application.Features.MedicalRecord.Command.DeleteMedicalRecord;
@@ -69,8 +70,10 @@ namespace Clinic_Flow.Controllers.MedicalRecord
 
             if (!int.TryParse(userIdValue, out var userId))
                 return Unauthorized();
+            try
+            {
 
-            var medicalRecordId = await _mediator.Send(
+                var medicalRecordId = await _mediator.Send(
                 new CreateMedicalRecordCommand(
                     userId,
                     dto.AppointmentId,
@@ -78,11 +81,18 @@ namespace Clinic_Flow.Controllers.MedicalRecord
                     dto.VisitDescription,
                     dto.Notes),
                 cancellationToken);
-            if(medicalRecordId<=0)
-                return NotFound();
-            return Ok(medicalRecordId);
-        }
+                return Ok(medicalRecordId);
+            }
+            catch (ConflictException ex)
+            {
+                return Conflict(new
+                {
+                    message = ex.Message
+                });
+            }
 
+        }
+       
         //[Authorize(Roles = "Doctor")]
         //[HttpGet("{id:int}")]
         //public async Task<IActionResult> GetById(
