@@ -35,23 +35,37 @@ namespace Clinic_Application.Features.Appointments.Query.GetAppointmentByUserIdP
             {
                 throw new Exception($"Patient with Person ID {user.PersonId} not found.");
             }
-         
-            var appointments = await context.Appointments
-     .Where(a =>
-         (patientId != null && a.PatientId == patientId.Value)).ToListAsync(cancellationToken);
-     
-            return appointments.Select(a => new PatientAppointmentDTO
-            {
-                Id = a.Id,
-                DoctorName = a.Doctor.Person.FirstName + " " + a.Doctor.Person.LastName,
-                Specialty = a.Doctor.Specialty,
-                AppointmentDate = a.AppointmentDate,
-                Status = a.AppointmentStatus.ToString(),
-                Notes = a.Doctor.Person.Note
-            }).ToList() ;
 
+            //       var appointments = await context.Appointments
+            //.Where(a =>
+            //    (patientId != null && a.PatientId == patientId.Value)).ToListAsync(cancellationToken);
 
-          
+            //       return appointments.Select(a => new PatientAppointmentDTO
+            //       {
+            //           Id = a.Id,
+            //           DoctorName = a.Doctor.Person.FirstName + " " + a.Doctor.Person.LastName,
+            //           Specialty = a.Doctor.Specialty,
+            //           AppointmentDate = a.AppointmentDate,
+            //           Status = a.AppointmentStatus.ToString(),
+            //           Notes = a.Doctor.Person.Note
+            //       }).ToList() ;
+
+            return await context.Appointments
+    .AsNoTracking()
+    .Where(a => a.PatientId == patientId.Value)
+    .Select(a => new PatientAppointmentDTO
+    {
+        Id = a.Id,
+        DoctorName = a.Doctor.Person.FirstName
+            + " "
+            + a.Doctor.Person.LastName,
+        Specialty = a.Doctor.Specialty,
+        AppointmentDate = a.AppointmentDate,
+        Status = a.AppointmentStatus.ToString(),
+        Notes = a.Doctor.Person.Note
+    })
+    .ToListAsync(cancellationToken);
+
         }
     }
 }
