@@ -53,6 +53,24 @@ builder.Services.AddHttpContextAccessor();
 
 #endregion
 
+#region Cors
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ApiCorsPolicy", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://127.0.0.1:5500",
+                "http://localhost:5500"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+#endregion
+
 #region Authentication
 
 builder.Services.AddAuthentication(options =>
@@ -213,6 +231,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("ApiCorsPolicy");
+
 app.UseRateLimiter();
 
 app.Use(async (context, next) =>
@@ -229,6 +249,7 @@ app.Use(async (context, next) =>
 app.UseAuthentication();
 
 app.UseAuthorization();
+
 
 app.MapControllers();
 
